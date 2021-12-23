@@ -1,11 +1,68 @@
+<html>
+<canvas id="myCanvas" width="1024" height="768"></canvas>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/engine.io-client/3.4.3/engine.io.min.js"></script>
 
 <script>
-  const socket = eio('ws://localhost:1738', {path: '/engine.io/echo'});
-  socket.on('open', () => {
-    console.log('socket opened');
-    socket.send('hello world!')
-    socket.on('message', (data) => { console.log('got message', data) });
-    socket.on('close', () => {});
-  });
+  const SCREEN_WIDTH = 1024;
+  const SCREEN_HEIGHT = 768;
+
+  var players = [{x: 10, y: 20}, {x: 100, y: 200}];
+
+  // const socket = eio('ws://localhost:1738', {path: '/engine.io/game'});
+  // socket.on('open', () => {
+  //   console.log('socket opened');
+  //   socket.send({type: 'playerjoin', id: 123, name: 'john xi-na'})
+  //   socket.on('message', (data) => { console.log('got message', data) });
+  //   socket.on('close', () => {});
+  // });
+
+  function onMouseMove(event) {
+    var rect = myCanvas.getBoundingClientRect();
+    var screenMiddleX = SCREEN_WIDTH / 2;
+    var screenMiddleY = SCREEN_HEIGHT / 2;
+
+    mouseX = (event.clientX - rect.left) - screenMiddleX;
+    mouseY = (event.clientY - rect.top) - screenMiddleY;
+    var angle = 0;
+
+    if (mouseX == 0 && mouseY < 0) {
+      angle = 0;
+    } else if (mouseX == 0 && mouseY > 0) {
+      angle = 180;
+    } else {
+      angle = Math.atan(mouseY / mouseX) * 180 / Math.PI + 90;
+      if (mouseX < 0) {
+        angle += 180;
+      }
+    }
+
+    // socket.emit('updateplayerposition', {angle: angle});
+  }
+
+  window.addEventListener("mousemove", onMouseMove, false);
+
+  function draw() {
+    window.requestAnimationFrame(draw);
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+
+    // Clear screen before redrawing.
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (const player of players) {
+      drawCircle(ctx, player.x, player.y, 10);
+    }
+  }
+
+  function drawCircle(ctx, x, y, r, color='#b8e015') {
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI*2);
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.closePath();
+  }
+
+  draw();
 </script>
+</html>
