@@ -1,3 +1,4 @@
+import game.GameEngine;
 import io.socket.engineio.server.EngineIoServer;
 import io.socket.engineio.server.JettyWebSocketHandler;
 import java.util.EnumSet;
@@ -12,10 +13,12 @@ import org.eclipse.jetty.websocket.server.WebSocketUpgradeFilter;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import servlets.EchoSocketServlet;
+import servlets.GameSocketServlet;
 
 public class Main {
 
   public static void main(String[] args) throws Exception {
+    GameEngine gameEngine = new GameEngine();
     Server server = new Server(1738);
 
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -32,12 +35,20 @@ public class Main {
     context.addServlet(new ServletHolder(new EchoSocketServlet(echoServer)),
         "/engine.io/echo/*");
 
+    EngineIoServer gameSocket = new EngineIoServer();
+    webSocketUpgradeFilter.addMapping(new ServletPathSpec("/engine.io/game/*"),
+            (ServletUpgradeRequest servletUpgradeRequest, ServletUpgradeResponse servletUpgradeResponse) -> new JettyWebSocketHandler(
+                    gameSocket));
+
+    context.addServlet(new ServletHolder(new GameSocketServlet(gameSocket, gameEngine)),
+            "/engine.io/game/*");
 //    FilterHolder cors = context.addFilter(CrossOriginFilter.class,"/*", EnumSet.of(DispatcherType.REQUEST));
 //    cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
 //    cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
 //    cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,HEAD,SERVICE");
 //    cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin");
 
+    gameEngine.runGame();
     System.out.println("server start");
 
     server.start();

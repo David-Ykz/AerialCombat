@@ -15,6 +15,7 @@ dependencies {
     implementation group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.4.31.v20200723'
     implementation group: 'org.eclipse.jetty', name: 'jetty-websocket', version: '8.2.0.v20160908'
     implementation group: 'org.eclipse.jetty.websocket', name: 'websocket-server', version: '9.4.31.v20200723'
+    implementation group: 'org.json', name: 'json', version: '20211205'
     implementation ('io.socket:engine.io-server:1.3.5')
     implementation ('io.socket:engine.io-server-jetty:1.3.5')
 

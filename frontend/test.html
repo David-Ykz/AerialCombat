@@ -6,38 +6,47 @@
 <script>
   const SCREEN_WIDTH = 1024;
   const SCREEN_HEIGHT = 768;
+  const SCREEN_MIDDLE_X = SCREEN_WIDTH / 2;
+  const SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
 
-  var players = [{x: 10, y: 20}, {x: 100, y: 200}];
+  var players = [{xPos: 10, yPos: 20}, {xPos: 100, yPos: 200}];
+  var obstacles = [{xPos: 10, yPos: 20}, {xPos: 100, yPos: 200}]
+  var myId = 123;
+  var angle = 0;
 
-  // const socket = eio('ws://localhost:1738', {path: '/engine.io/game'});
-  // socket.on('open', () => {
-  //   console.log('socket opened');
-  //   socket.send({type: 'playerjoin', id: 123, name: 'john xi-na'})
-  //   socket.on('message', (data) => { console.log('got message', data) });
-  //   socket.on('close', () => {});
-  // });
+  const socket = eio('ws://localhost:1738', {path: '/engine.io/game'});
+  socket.on('open', () => {
+    console.log('socket opened');
+    socket.send(JSON.stringify({type: 'playerjoin', id: 123, name: 'john xi-na'}));
+    socket.on('message', (data) => {
+      const jsonData = JSON.parse(data);
+      players = jsonData.players;
+    });
+    socket.on('close', () => {});
+  });
 
   function onMouseMove(event) {
     var rect = myCanvas.getBoundingClientRect();
-    var screenMiddleX = SCREEN_WIDTH / 2;
-    var screenMiddleY = SCREEN_HEIGHT / 2;
 
-    mouseX = (event.clientX - rect.left) - screenMiddleX;
-    mouseY = (event.clientY - rect.top) - screenMiddleY;
-    var angle = 0;
+    mouseX = (event.clientX - rect.left) - SCREEN_MIDDLE_X;
+    mouseY = (event.clientY - rect.top) - SCREEN_MIDDLE_Y;
+    mouseY *= -1;
 
     if (mouseX == 0 && mouseY < 0) {
       angle = 0;
     } else if (mouseX == 0 && mouseY > 0) {
       angle = 180;
-    } else {
-      angle = Math.atan(mouseY / mouseX) * 180 / Math.PI + 90;
+    } else if (!(mouseX == 0 && mouseY == 0)) {
+      angle = Math.atan(mouseY / mouseX) * 180 / Math.PI;
       if (mouseX < 0) {
         angle += 180;
       }
     }
+    if (angle < 0) {
+      angle = 360 + angle;
+    }
 
-    // socket.emit('updateplayerposition', {angle: angle});
+    socket.send(JSON.stringify({type: 'updateplayer', id: 123, angle: angle}));
   }
 
   window.addEventListener("mousemove", onMouseMove, false);
@@ -50,8 +59,22 @@
     // Clear screen before redrawing.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    var myX;
+    var myY;
+
     for (const player of players) {
-      drawCircle(ctx, player.x, player.y, 10);
+      if (player.id == myId) {
+        myX = player.xPos;
+        myY = player.yPos;
+        break;
+      }
+    }
+
+    for (const player of players) {
+      drawCircle(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, 10);
+    }
+    for (const obstacle of obstacles) {
+      drawCircle(ctx, obstacle.xPos - myX + SCREEN_MIDDLE_X, obstacle.yPos - myY + SCREEN_MIDDLE_Y, 10, ' blue');
     }
   }
 
