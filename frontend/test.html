@@ -1,0 +1,11 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/engine.io-client/3.4.3/engine.io.min.js"></script>
+
+<script>
+  const socket = eio('ws://localhost:1738', {path: '/engine.io/echo'});
+  socket.on('open', () => {
+    console.log('socket opened');
+    socket.send('hello world!')
+    socket.on('message', (data) => { console.log('got message', data) });
+    socket.on('close', () => {});
+  });
+</script>
