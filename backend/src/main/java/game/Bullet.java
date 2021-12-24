@@ -27,7 +27,9 @@ public class Bullet extends Projectile {
 
         }
 
-        if (b * b - 4 * a * c >= 0) {
+        if (b * b - 4 * a * c >= 0 &&
+                playerX >= getxPos() && playerX <= (getxPos() + getxVelocity() * getSpeed()) &&
+                playerY >= getyPos() && playerY <= (getyPos() - getyVelocity() * getSpeed())) {
             return true;
         } else {
             return false;
