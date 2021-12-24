@@ -22,11 +22,9 @@ public final class GameSocketServlet extends WebSocketServlet {
             String rawMessage = (String) args[0];
             onMessage(socket, rawMessage);
         });
-
     }
 
     private void onMessage(EngineIoSocket socket, String rawMessage) {
-        System.out.println(rawMessage);
         JSONObject message = new JSONObject(rawMessage);
         if (message.getString("type").equals("playerjoin")) {
             onPlayerJoin(message.getInt("id"), message.getString("name"), socket);
@@ -43,6 +41,9 @@ public final class GameSocketServlet extends WebSocketServlet {
     }
 
     private void onPlayerJoin(int id, String name, EngineIoSocket socket) {
+        socket.on("close", (Object... args) -> {
+            game.removePlayer(id);
+        });
         Player player = new Player(id, name, socket);
         game.addPlayer(player);
     }

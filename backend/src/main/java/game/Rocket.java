@@ -9,7 +9,7 @@ public class Rocket extends Projectile {
         setDamage(100);
     }
 
-
+    @Override
     public boolean checkCollision(Player player) {
         return false;
     }

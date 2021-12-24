@@ -17,15 +17,25 @@ public class GameEngine {
     private ArrayList<Projectile> projectiles = new ArrayList<>();
     private final double acceleration = 0.5;
 
-    public void addPlayer(Player player) {
+    public synchronized void addPlayer(Player player) {
         players.put(player.getId(), player);
     }
-    public void addProjectile(Projectile projectile) {
+
+    public synchronized void removePlayer(int playerId) {
+        for (Projectile projectile : projectiles) {
+            if (projectile.getPlayerID() == playerId) {
+                projectiles.remove(projectile);
+            }
+        }
+        players.remove(playerId);
+    }
+
+    public synchronized void addProjectile(Projectile projectile) {
         projectiles.add(projectile);
     }
 
 
-    public void updatePlayerVelocity(int id, double angle) {
+    public synchronized void updatePlayerVelocity(int id, double angle) {
         Player player = players.get(id);
         double targetXVelocity = player.getSpeed() * Math.cos(Math.toRadians(angle));
         double targetYVelocity = player.getSpeed() * Math.sin(Math.toRadians(angle));
@@ -45,14 +55,11 @@ public class GameEngine {
 //        }
     }
 
-    public void fireProjectile(int id, double angle) {
+    public synchronized void fireProjectile(int id, double angle) {
         Player player = players.get(id);
         Projectile projectile = player.fireBullet(angle);
         projectiles.add(projectile);
     }
-
-
-
 
     public void runGame() {
         Timer timer = new Timer();
@@ -128,5 +135,4 @@ public class GameEngine {
         }
 
     }
-
 }

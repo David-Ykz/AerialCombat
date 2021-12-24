@@ -9,16 +9,19 @@
   const SCREEN_MIDDLE_X = SCREEN_WIDTH / 2;
   const SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const playerId = urlParams.get('playerId') == null ? Math.floor(Math.random() * 1000000) : urlParams.get('playerId');
+  const playerName = urlParams.get('playerName') == null ? 'john doe' : urlParams.get('playerName');
+
   var gameState = {};
   var obstacles = [{xPos: 10, yPos: 20}, {xPos: 100, yPos: 200}];
-  var myId = 123;
   var angle = 0;
 
   const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
   // const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
   socket.on('open', () => {
     console.log('socket opened');
-    socket.send(JSON.stringify({type: 'playerjoin', id: 123, name: 'john xi-na'}));
+    socket.send(JSON.stringify({type: 'playerjoin', id: playerId, name: playerName}));
     socket.on('message', (data) => {
       console.log('got', data);
       gameState = JSON.parse(data);
@@ -58,12 +61,12 @@
       return;
     }
     const angle = getMouseEventAngle(event.clientX, event.clientY);
-    socket.send(JSON.stringify({type: 'shootbullet', id: 123, angle: angle}));
+    socket.send(JSON.stringify({type: 'shootbullet', id: playerId, angle: angle}));
   }
 
   function onMouseMove(event) {
     const angle = getMouseEventAngle(event.clientX, event.clientY);
-    socket.send(JSON.stringify({type: 'updateplayer', id: 123, angle: angle}));
+    socket.send(JSON.stringify({type: 'updateplayer', id: playerId, angle: angle}));
   }
 
 
@@ -79,7 +82,7 @@
     var myY;
 
     for (const player of gameState.players) {
-      if (player.id == myId) {
+      if (player.id == playerId) {
         myX = player.xPos;
         myY = player.yPos;
         break;
