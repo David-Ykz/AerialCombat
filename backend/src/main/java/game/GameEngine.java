@@ -67,7 +67,8 @@ public class GameEngine {
 
     private synchronized void executeGameLoopIteration() {
         updatePlayerPos();
-        sendPlayerInfo();
+        updateProjectilePos();
+        sendGameInfo();
     }
 
     public synchronized void updatePlayerPos() {
@@ -77,7 +78,18 @@ public class GameEngine {
         }
     }
 
-    public synchronized void sendPlayerInfo() {
+    public synchronized void updateProjectilePos() {
+        ArrayList<Projectile> removeProjectiles = new ArrayList<>();
+        for (Projectile projectile : projectiles) {
+            if (projectile.updatePosition()) {
+                removeProjectiles.add(projectile);
+            }
+        }
+        projectiles.removeAll(removeProjectiles);
+    }
+
+
+    public synchronized void sendGameInfo() {
         JSONObject gameInfo = new JSONObject();
         JSONArray playerInfo = new JSONArray();
         JSONArray projectileInfo = new JSONArray();
