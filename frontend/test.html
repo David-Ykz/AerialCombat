@@ -20,7 +20,9 @@
     console.log('socket opened');
     socket.send(JSON.stringify({type: 'playerjoin', id: 123, name: 'john xi-na'}));
     socket.on('message', (data) => {
+      console.log('got', data);
       gameState = JSON.parse(data);
+      console.log(gameState);
     });
     socket.on('close', () => {});
   });

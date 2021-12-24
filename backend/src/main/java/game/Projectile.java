@@ -59,7 +59,7 @@ public abstract class Projectile {
 
     public boolean updatePosition() {
         xPos += xVelocity * speed;
-        yPos += yVelocity * speed;
+        yPos -= yVelocity * speed;
         range -= speed;
         if (range <= 0) {
             return true;
