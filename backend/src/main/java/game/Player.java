@@ -10,16 +10,17 @@ public class Player {
     private int speed = 6;
     private int health;
     private EngineIoSocket socket;
-
     private double xPos;
     private double yPos;
     private double xVelocity;
     private double yVelocity;
+    private Weapon weapon;
 
     public Player(int id, String name, EngineIoSocket socket) {
         this.id = id;
         this.name = name;
         this.socket = socket;
+        this.weapon = new BasicWeapon(5);
     }
 
     public int getId() { return id; }
@@ -48,6 +49,11 @@ public class Player {
         this.yPos = yPos;
     }
 
+    public Projectile fireBullet(double angle) {
+        return weapon.shootProjectile(xPos, yPos, angle, id);
+    }
+
+
     public double getxVelocity() {
         return xVelocity;
     }
@@ -64,7 +70,6 @@ public class Player {
 
     public JSONObject toJSON() {
         JSONObject message = new JSONObject();
-        message.put("type", "updateplayer");
         message.put("id", id);
         message.put("name", name);
         message.put("xPos", xPos);

@@ -32,6 +32,8 @@ public final class GameSocketServlet extends WebSocketServlet {
             onPlayerJoin(message.getInt("id"), message.getString("name"), socket);
         } else if (message.getString("type").equals("updateplayer")) {
             game.updatePlayerVelocity(message.getInt("id"), message.getDouble("angle"));
+        } else if (message.getString("type").equals("shootbullet")){
+            game.fireProjectile(message.getInt("id"), message.getDouble("angle"));
         } else {
             throw new RuntimeException("Invalid message type " + message.getString("type"));
         }

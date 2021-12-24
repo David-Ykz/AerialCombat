@@ -10,14 +10,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.ArrayList;
 
 public class GameEngine {
     private HashMap<Integer, Player> players = new HashMap<>();
+    private ArrayList<Projectile> projectiles = new ArrayList<>();
     private final double acceleration = 0.5;
 
     public void addPlayer(Player player) {
         players.put(player.getId(), player);
     }
+    public void addProjectile(Projectile projectile) {
+        projectiles.add(projectile);
+    }
+
 
     public void updatePlayerVelocity(int id, double angle) {
         Player player = players.get(id);
@@ -38,6 +44,15 @@ public class GameEngine {
 //            player.setyVelocity(acceleration * targetYVelocity / Math.abs(targetYVelocity));
 //        }
     }
+
+    public void fireProjectile(int id, double angle) {
+        Player player = players.get(id);
+        Projectile projectile = player.fireBullet(angle);
+        projectiles.add(projectile);
+    }
+
+
+
 
     public void runGame() {
         Timer timer = new Timer();
@@ -64,11 +79,17 @@ public class GameEngine {
 
     public synchronized void sendPlayerInfo() {
         JSONObject gameInfo = new JSONObject();
-        JSONArray message = new JSONArray();
+        JSONArray playerInfo = new JSONArray();
+        JSONArray projectileInfo = new JSONArray();
         for (Player player : players.values()) {
-            message.put(player.toJSON());
+            playerInfo.put(player.toJSON());
         }
-        gameInfo.put("players", message);
+        gameInfo.put("players", playerInfo);
+        for (Projectile projectile : projectiles) {
+            projectileInfo.put(projectile.toJSON());
+        }
+        gameInfo.put("projectiles", projectileInfo);
+
         for (Player player : players.values()) {
             player.sendInfo(gameInfo.toString());
         }
