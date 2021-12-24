@@ -10,6 +10,7 @@ public class Rocket extends Projectile {
     }
 
 
-
-
+    public boolean checkCollision(Player player) {
+        return false;
+    }
 }

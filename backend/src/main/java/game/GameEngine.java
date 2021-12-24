@@ -62,7 +62,7 @@ public class GameEngine {
             public void run() {
                 executeGameLoopIteration();
             }
-        }, 0, 5);
+        }, 0, 20);
     }
 
     private synchronized void executeGameLoopIteration() {
