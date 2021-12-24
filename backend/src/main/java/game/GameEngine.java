@@ -68,6 +68,7 @@ public class GameEngine {
     private synchronized void executeGameLoopIteration() {
         updatePlayerPos();
         updateProjectilePos();
+        checkProjectileCollisions();
         sendGameInfo();
     }
 
@@ -87,6 +88,26 @@ public class GameEngine {
         }
         projectiles.removeAll(removeProjectiles);
     }
+
+    public synchronized void checkProjectileCollisions() {
+        ArrayList<Projectile> removeProjectiles = new ArrayList<>();
+        ArrayList<Player> removePlayers = new ArrayList<>();
+        for (Player player : players.values()) {
+            for (Projectile projectile : projectiles) {
+                if (projectile.getPlayerID() != player.getId() && projectile.checkCollision(player)) {
+                    removeProjectiles.add(projectile);
+                    if (player.takeDamage(projectile.getDamage())) {
+                        removePlayers.add(player);
+                    }
+                }
+            }
+        }
+        projectiles.removeAll(removeProjectiles);
+        for (Player player : removePlayers) {
+            players.remove(player.getId());
+        }
+    }
+
 
 
     public synchronized void sendGameInfo() {

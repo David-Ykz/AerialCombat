@@ -25,6 +25,9 @@
       console.log(gameState);
     });
     socket.on('close', () => {});
+    window.addEventListener("mousemove", onMouseMove, false);
+    window.addEventListener("mouseup", onMouseUp, false);
+
   });
 
   function getMouseEventAngle(inputMouseX, inputMouseY) {
@@ -63,8 +66,6 @@
     socket.send(JSON.stringify({type: 'updateplayer', id: 123, angle: angle}));
   }
 
-  window.addEventListener("mousemove", onMouseMove, false);
-  window.addEventListener("mouseup", onMouseUp, false);
 
   function draw() {
     window.requestAnimationFrame(draw);

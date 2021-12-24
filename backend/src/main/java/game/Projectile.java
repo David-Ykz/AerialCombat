@@ -68,4 +68,7 @@ public abstract class Projectile {
         }
     }
 
+    abstract public boolean checkCollision(Player player);
+
+
 }

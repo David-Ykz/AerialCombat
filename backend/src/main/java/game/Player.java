@@ -15,6 +15,7 @@ public class Player {
     private double xVelocity;
     private double yVelocity;
     private Weapon weapon;
+    private int radius = 10;
 
     public Player(int id, String name, EngineIoSocket socket) {
         this.id = id;
@@ -31,8 +32,13 @@ public class Player {
     public int getHealth() {
         return health;
     }
-    public void setHealth(int health) {
-        this.health = health;
+    public boolean takeDamage(int health) {
+        this.health -= health;
+        if (this.health <= 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
     public double getxPos() {
         return xPos;
@@ -66,6 +72,7 @@ public class Player {
     public void setyVelocity(double yVelocity) {
         this.yVelocity = yVelocity;
     }
+    public int getRadius() { return radius; }
 
 
     public JSONObject toJSON() {
