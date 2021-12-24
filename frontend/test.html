@@ -9,27 +9,26 @@
   const SCREEN_MIDDLE_X = SCREEN_WIDTH / 2;
   const SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
 
-  var players = [{xPos: 10, yPos: 20}, {xPos: 100, yPos: 200}];
-  var obstacles = [{xPos: 10, yPos: 20}, {xPos: 100, yPos: 200}]
+  var gameState = {};
+  var obstacles = [{xPos: 10, yPos: 20}, {xPos: 100, yPos: 200}];
   var myId = 123;
   var angle = 0;
 
-  const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
+  const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
+  // const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
   socket.on('open', () => {
     console.log('socket opened');
     socket.send(JSON.stringify({type: 'playerjoin', id: 123, name: 'john xi-na'}));
     socket.on('message', (data) => {
-      const jsonData = JSON.parse(data);
-      players = jsonData.players;
+      gameState = JSON.parse(data);
     });
     socket.on('close', () => {});
   });
 
-  function onMouseMove(event) {
+  function getMouseEventAngle(inputMouseX, inputMouseY) {
     var rect = myCanvas.getBoundingClientRect();
-
-    mouseX = (event.clientX - rect.left) - SCREEN_MIDDLE_X;
-    mouseY = (event.clientY - rect.top) - SCREEN_MIDDLE_Y;
+    mouseX = (inputMouseX - rect.left) - SCREEN_MIDDLE_X;
+    mouseY = (inputMouseY - rect.top) - SCREEN_MIDDLE_Y;
     mouseY *= -1;
 
     if (mouseX == 0 && mouseY < 0) {
@@ -45,11 +44,25 @@
     if (angle < 0) {
       angle = 360 + angle;
     }
+    return angle;
+  }
+  
+  function onMouseUp(event) {
+    if (event.which != 1) {
+      // Only handle left click events.
+      return;
+    }
+    const angle = getMouseEventAngle(event.clientX, event.clientY);
+    socket.send(JSON.stringify({type: 'shootbullet', id: 123, angle: angle}));
+  }
 
+  function onMouseMove(event) {
+    const angle = getMouseEventAngle(event.clientX, event.clientY);
     socket.send(JSON.stringify({type: 'updateplayer', id: 123, angle: angle}));
   }
 
   window.addEventListener("mousemove", onMouseMove, false);
+  window.addEventListener("mouseup", onMouseUp, false);
 
   function draw() {
     window.requestAnimationFrame(draw);
@@ -62,7 +75,7 @@
     var myX;
     var myY;
 
-    for (const player of players) {
+    for (const player of gameState.players) {
       if (player.id == myId) {
         myX = player.xPos;
         myY = player.yPos;
@@ -70,11 +83,14 @@
       }
     }
 
-    for (const player of players) {
+    for (const player of gameState.players) {
       drawCircle(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, 10);
     }
+    for (const projectile of gameState.projectiles) {
+      drawCircle(ctx, projectile.xPos - myX + SCREEN_MIDDLE_X, projectile.yPos - myY + SCREEN_MIDDLE_Y, 2, 'black');
+    }
     for (const obstacle of obstacles) {
-      drawCircle(ctx, obstacle.xPos - myX + SCREEN_MIDDLE_X, obstacle.yPos - myY + SCREEN_MIDDLE_Y, 10, ' blue');
+      drawCircle(ctx, obstacle.xPos - myX + SCREEN_MIDDLE_X, obstacle.yPos - myY + SCREEN_MIDDLE_Y, 10, 'blue');
     }
   }
 
