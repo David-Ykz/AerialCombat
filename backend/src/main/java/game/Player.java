@@ -7,7 +7,7 @@ import org.json.JSONObject;
 public class Player {
     private final int id;
     private final String name;
-    private int speed = 4;
+    private int speed = 8;
     private int health = 100;
     private EngineIoSocket socket;
     private double xPos;
