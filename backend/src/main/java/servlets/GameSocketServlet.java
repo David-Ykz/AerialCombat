@@ -35,20 +35,15 @@ public final class GameSocketServlet extends WebSocketServlet {
         } else {
             throw new RuntimeException("Invalid message type " + message.getString("type"));
         }
-
-//        message.toString();
-//        socket.send(new Packet<>(Packet.MESSAGE, "you sent - " + rawMessage));
     }
 
     private void onPlayerJoin(int id, String name, EngineIoSocket socket) {
         socket.on("close", (Object... args) -> {
+            System.out.println("disconnected" + id);
             game.removePlayer(id);
         });
         Player player = new Player(id, name, socket);
+        System.out.println("adding player");
         game.addPlayer(player);
     }
-
-
-
-
 }

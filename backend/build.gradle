@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
     implementation group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.0.M0'
     implementation group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.31.v20200723'
     implementation group: 'org.eclipse.jetty', name: 'jetty-servlets', version: '9.4.31.v20200723'
