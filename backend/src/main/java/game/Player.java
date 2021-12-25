@@ -86,6 +86,23 @@ public class Player {
         return message;
     }
 
+    public boolean checkCollision(Player player) {
+        double playerX = player.getxPos();
+        double playerY = player.getyPos();
+        double playerRadius = player.getRadius();
+
+        double distance = Math.sqrt((getxPos() - playerX) * (getxPos() - playerX) + (getyPos() - playerY) * (getyPos() - playerY));
+
+        if (distance <= playerRadius + getRadius()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+
     public void sendInfo(String message) {
         socket.send(new Packet<>(Packet.MESSAGE, message));
     }

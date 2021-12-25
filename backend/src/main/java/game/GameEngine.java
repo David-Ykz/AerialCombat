@@ -82,6 +82,7 @@ public class GameEngine {
         updatePlayerPos();
         updateProjectilePos();
         checkProjectileCollisions();
+        checkPlayerCollision();
         sendGameInfo();
     }
 
@@ -120,6 +121,25 @@ public class GameEngine {
             players.remove(player.getId());
         }
     }
+
+    private synchronized void checkPlayerCollision() {
+        ArrayList<Player> removePlayers = new ArrayList<>();
+        for (Player player : players.values()) {
+            for (Player otherPlayer : players.values()) {
+                if (otherPlayer.getId() != player.getId() && player.checkCollision(otherPlayer)) {
+                    if (player.takeDamage(25)) {
+                        removePlayers.add(player);
+                    }
+                }
+            }
+        }
+        for (Player player : removePlayers) {
+            players.remove(player.getId());
+        }
+    }
+
+
+
 
     private void sendGameInfo() {
         JSONObject gameInfo = new JSONObject();
