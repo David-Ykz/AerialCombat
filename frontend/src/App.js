@@ -8,6 +8,8 @@ import {FixedBottom} from 'react-fixed-bottom';
 
 import Game from './Game.js';
 import Home from './Home.js';
+import PrivacyPolicy from './views/privacypolicy/PrivacyPolicy.js';
+import TermsOfService from './views/termsofservice/TermsOfService.js';
 
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -25,6 +27,12 @@ function App() {
     <Router>
       <Container style={{height: '100vh'}}>
         <div id="app" style={{height:'100%'}}>
+          <Route path="/privacy_policy">
+            <PrivacyPolicy />
+          </Route>
+          <Route path="/terms_of_service">
+            <TermsOfService />
+          </Route>
           <Switch>
            <Route path="/game" component={Game} exact={true} />
           </Switch>
