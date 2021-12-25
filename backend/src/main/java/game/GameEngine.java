@@ -18,6 +18,10 @@ import java.util.ArrayList;
 public class GameEngine {
     private HashMap<Integer, Player> players = new HashMap<>();
     private ArrayList<Projectile> projectiles = new ArrayList<>();
+    private final int upperXboundary = 4000;
+    private final int lowerXboundary = -4000;
+    private final int upperYboundary = -500;
+    private final int lowerYboundary = 1000;
     private final double acceleration = 0.5;
 
     public synchronized void addPlayer(Player player) {
@@ -31,9 +35,17 @@ public class GameEngine {
 
     public synchronized void updatePlayerVelocity(int id, double angle) {
         Player player = players.get(id);
-        double targetXVelocity = player.getSpeed() * Math.cos(Math.toRadians(angle));
-        double targetYVelocity = player.getSpeed() * Math.sin(Math.toRadians(angle));
-
+        double targetXVelocity;
+        double targetYVelocity;
+        if (player.getxPos() + player.getRadius() > upperXboundary || player.getxPos() - player.getRadius() < lowerXboundary
+        || player.getyPos() + player.getRadius() > lowerYboundary || player.getyPos() - player.getRadius() < upperYboundary) {
+            targetXVelocity = player.getSpeed() * Math.cos(Math.toRadians(angle)) / 2;
+            targetYVelocity = player.getSpeed() * Math.sin(Math.toRadians(angle)) / 2;
+            player.takeDamage(1);
+        } else {
+            targetXVelocity = player.getSpeed() * Math.cos(Math.toRadians(angle));
+            targetYVelocity = player.getSpeed() * Math.sin(Math.toRadians(angle));
+        }
         player.setxVelocity(-targetXVelocity);
         player.setyVelocity(targetYVelocity);
 
@@ -123,6 +135,10 @@ public class GameEngine {
                 projectileInfo.put(projectile.toJSON());
             }
             gameInfo.put("projectiles", projectileInfo);
+            gameInfo.put("upperXboundary", upperXboundary);
+            gameInfo.put("lowerXboundary", lowerXboundary);
+            gameInfo.put("upperYboundary", upperYboundary);
+            gameInfo.put("lowerYboundary", lowerYboundary);
 
             copiedPlayers = players.values().stream().collect(toImmutableList());
         }
