@@ -35,7 +35,7 @@ public class Main {
     server.setHandler(context);
 
     EngineIoServer echoServer = new EngineIoServer();
-    WebSocketUpgradeFilter webSocketUpgradeFilter = WebSocketUpgradeFilter.configureContext(
+    WebSocketUpgradeFilter webSocketUpgradeFilter = WebSocketUpgradeFilter.configure(
         context);
     webSocketUpgradeFilter.addMapping(new ServletPathSpec("/engine.io/echo/*"),
         (ServletUpgradeRequest servletUpgradeRequest, ServletUpgradeResponse servletUpgradeResponse) -> new JettyWebSocketHandler(

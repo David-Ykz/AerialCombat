@@ -17,7 +17,7 @@
   var obstacles = [{xPos: 10, yPos: 20}, {xPos: 100, yPos: 200}];
   var angle = 0;
 
-  //const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
+  // const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
   const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
   socket.on('open', () => {
     console.log('socket opened');
@@ -91,7 +91,9 @@
     }
 
     for (const player of gameState.players) {
-      drawCircle(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, 10);
+      const color = player.id == playerId ? 'green' : 'red';
+      drawCircle(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, 10, color);
+      drawText(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y + 20, player.name, 'center', color, font='12px Arial');
     }
     for (const projectile of gameState.projectiles) {
       drawCircle(ctx, projectile.xPos - myX + SCREEN_MIDDLE_X, projectile.yPos - myY + SCREEN_MIDDLE_Y, 2, 'black');
@@ -107,6 +109,13 @@
       ctx.fillStyle = color;
       ctx.fill();
       ctx.closePath();
+  }
+
+  function drawText(ctx, x, y, text, textAlign='left', color='black', font='30px Arial') {
+    ctx.font = font;
+    ctx.fillStyle = color;
+    ctx.textAlign = textAlign;
+    ctx.fillText(text, x, y);
   }
 
   draw();
