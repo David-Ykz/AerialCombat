@@ -25,6 +25,7 @@ Clouds - Image by rawpixel.com
   }
   var angle = 0;
   var mouseDownTimeout;
+  var isGameOver = false;
 
   const cloud = new Image();
   cloud.src = 'cloud.png';
@@ -39,7 +40,12 @@ Clouds - Image by rawpixel.com
     console.log('socket opened');
     socket.send(JSON.stringify({type: 'playerjoin', id: playerId, name: playerName}));
     socket.on('message', (data) => {
-      gameState = JSON.parse(data);
+      const msg = JSON.parse(data);
+      if (msg.type == 'gameInfo') {
+        gameState = msg;
+      } else if (msg.type == 'gameOver') {
+        isGameOver = true;
+      }
     });
     socket.on('close', () => { console.log('socket closed') });
     window.addEventListener("mousemove", onMouseMove, false);
@@ -137,6 +143,10 @@ Clouds - Image by rawpixel.com
     }
     for (const projectile of gameState.projectiles) {
       drawCircle(ctx, projectile.xPos - myX + SCREEN_MIDDLE_X, projectile.yPos - myY + SCREEN_MIDDLE_Y, 2, 'black');
+    }
+
+    if (isGameOver) {
+      drawText(ctx, SCREEN_WIDTH / 2, 40, 'Game over. Tough scene.', 'center', 'red');
     }
   }
 
