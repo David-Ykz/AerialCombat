@@ -126,9 +126,9 @@ public class Player {
         }
     }
 
-    public void sendDisconnect() {
+    public void sendGameOver() {
         JSONObject message = new JSONObject();
-        message.put("message type", "disconnected");
+        message.put("type", "gameOver");
         message.put("id", id);
         sendInfo(message.toString());
     }

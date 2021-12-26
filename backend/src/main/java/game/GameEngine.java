@@ -74,7 +74,7 @@ public class GameEngine {
             player.setyVelocity(targetYVelocity);
         }
         for (Player player : removePlayers) {
-            player.sendDisconnect();
+            player.sendGameOver();
             players.remove(player.getId());
         }
     }
@@ -140,7 +140,7 @@ public class GameEngine {
         }
         projectiles.removeAll(removeProjectiles);
         for (Player player : removePlayers) {
-            player.sendDisconnect();
+            player.sendGameOver();
             players.remove(player.getId());
         }
     }
@@ -157,7 +157,7 @@ public class GameEngine {
             }
         }
         for (Player player : removePlayers) {
-            player.sendDisconnect();
+            player.sendGameOver();
             players.remove(player.getId());
         }
     }
