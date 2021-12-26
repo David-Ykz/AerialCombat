@@ -106,6 +106,7 @@
       const color = player.id == playerId ? 'green' : 'red';
       drawCircle(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, 10, color);
       drawText(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y + 20, player.name, 'center', color, font='12px Arial');
+      drawHealthBar(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, player.health);
     }
     for (const projectile of gameState.projectiles) {
       drawCircle(ctx, projectile.xPos - myX + SCREEN_MIDDLE_X, projectile.yPos - myY + SCREEN_MIDDLE_Y, 2, 'black');
@@ -128,6 +129,20 @@
     ctx.fillStyle = color;
     ctx.textAlign = textAlign;
     ctx.fillText(text, x, y);
+  }
+
+  function drawHealthBar(ctx, x, y, health) {
+      ctx.beginPath();
+      ctx.rect(x - 75/2, y - 30, 75, 10);
+      ctx.fillStyle = "#ff1100";
+      ctx.fill();
+      ctx.closePath();
+
+      ctx.beginPath();
+      ctx.rect(x - 75/2, y - 30, (health/4)*3, 10);
+      ctx.fillStyle = "#11ff00";
+      ctx.fill();
+      ctx.closePath();
   }
 
   draw();
