@@ -16,22 +16,20 @@
   var gameState = {};
   var obstacles = [{xPos: 10, yPos: 20}, {xPos: 100, yPos: 200}];
   var angle = 0;
+  var mouseDownTimeout;
 
-  // const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
-  const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
+  const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
+  // const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
   socket.on('open', () => {
     console.log('socket opened');
     socket.send(JSON.stringify({type: 'playerjoin', id: playerId, name: playerName}));
     socket.on('message', (data) => {
-      console.log('got', data);
       gameState = JSON.parse(data);
-      console.log(gameState);
     });
     socket.on('close', () => { console.log('socket closed') });
-    console.log('adding listeners');
     window.addEventListener("mousemove", onMouseMove, false);
+    window.addEventListener("mousedown", onMouseDown, false);
     window.addEventListener("mouseup", onMouseUp, false);
-    console.log('added listeners');
   });
 
   function getMouseEventAngle(inputMouseX, inputMouseY) {
@@ -56,13 +54,27 @@
     return angle;
   }
 
-  function onMouseUp(event) {
+  function genOnShootFn() {
+    return function () {
+      socket.send(JSON.stringify({type: 'shootbullet', id: playerId, angle: angle}));
+      mouseDownTimeout = setTimeout(genOnShootFn(), 10);
+    };
+  }
+
+  function onMouseDown(event) {
     if (event.which != 1) {
       // Only handle left click events.
       return;
     }
     const angle = getMouseEventAngle(event.clientX, event.clientY);
     socket.send(JSON.stringify({type: 'shootbullet', id: playerId, angle: angle}));
+    mouseDownTimeout = setTimeout(genOnShootFn(), 10);
+  }
+
+  function onMouseUp(event) {
+    if (mouseDownTimeout) {
+      clearTimeout(mouseDownTimeout);
+    }
   }
 
   function onMouseMove(event) {
