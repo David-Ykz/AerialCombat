@@ -61,7 +61,6 @@ public class GameEngine {
                     player.setCurrentAngle(currentAngle - maxAngleChange);
                 }
             }
-
             player.setCurrentAngle(player.getCurrentAngle() % 360);
             if (player.getCurrentAngle() < 0) {
                 player.setCurrentAngle(360 + player.getCurrentAngle());
@@ -77,51 +76,11 @@ public class GameEngine {
             player.setxVelocity(-targetXVelocity);
             player.setyVelocity(targetYVelocity);
         }
-
-
-
-
-//        double xAcceleration = accelerationLimit * Math.cos(Math.toRadians(angle));
-//        double yAcceleration = accelerationLimit * Math.sin(Math.toRadians(angle));
-////        System.out.println(Math.abs(targetXVelocity) + Math.abs(targetYVelocity));
-//
-//        if (player.getxPos() + player.getRadius() > upperXboundary || player.getxPos() - player.getRadius() < lowerXboundary
-//        || player.getyPos() + player.getRadius() > lowerYboundary || player.getyPos() - player.getRadius() < upperYboundary) {
-//            xAcceleration = xAcceleration / 2;
-//            yAcceleration = yAcceleration / 2;
-//            player.takeDamage(1);
-//        }
-//
-//
-//        double newVelocityX = player.getxVelocity() - xAcceleration;
-//        double newVelocityY = player.getyVelocity() + yAcceleration;
-//        double speed = Math.sqrt(newVelocityX * newVelocityX + newVelocityY * newVelocityY);
-//
-//        if (speed >= player.getSpeed()) {
-//            newVelocityX = newVelocityX / speed * player.getSpeed();
-//            newVelocityY = newVelocityY / speed * player.getSpeed();
-//        }
-//
-//
-//
-//        player.setxVelocity(newVelocityX);
-//        player.setyVelocity(newVelocityY);
-//
-//        if (targetXVelocity - player.getxVelocity() <= acceleration) {
-//            player.setxVelocity(player.getxVelocity() - targetXVelocity);
-//        } else {
-//            player.setxVelocity(player.getxVelocity() - acceleration);
-//        }
-//        if (targetYVelocity - player.getyVelocity() <= acceleration) {
-//            player.setyVelocity(targetYVelocity);
-//        } else {
-//            player.setyVelocity(acceleration * targetYVelocity / Math.abs(targetYVelocity));
-//        }
     }
 
-    public synchronized void fireProjectile(int id, double angle) {
+    public synchronized void fireProjectile(int id) {
         Player player = players.get(id);
-        Projectile projectile = player.fireBullet(angle);
+        Projectile projectile = player.fireBullet(player.getCurrentAngle());
         projectiles.add(projectile);
     }
 
