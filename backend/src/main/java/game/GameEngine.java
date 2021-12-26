@@ -164,6 +164,7 @@ public class GameEngine {
 
     private void sendGameInfo() {
         JSONObject gameInfo = new JSONObject();
+        gameInfo.put("type", "gameInfo");
         ImmutableList<Player> copiedPlayers;
         synchronized (this) {
             JSONArray playerInfo = new JSONArray();
