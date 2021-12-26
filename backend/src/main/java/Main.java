@@ -53,25 +53,25 @@ public class Main {
             "/engine.io/game/*");
 
     // HTTPS configuration
-    HttpConfiguration https = new HttpConfiguration();
-    https.addCustomizer(new SecureRequestCustomizer());
-
-    // Configuring SSL
-    SslContextFactory.Server sslServer = new SslContextFactory.Server();
-
-    // Defining keystore path and passwords
-    sslServer.setKeyStorePath("/home/ec2-user/cert.pkcs12");
-    sslServer.setKeyStorePassword("longGOOGshortVIX");
-    sslServer.setKeyManagerPassword("longGOOGshortVIX");
-
-    // Configuring the connector
-    ServerConnector sslConnector = new ServerConnector(server, new SslConnectionFactory(sslServer, "http/1.1"), new HttpConnectionFactory(https));
-    sslConnector.setPort(1700);
-
-    // Setting HTTP and HTTPS connectors
-    server.setConnectors(new Connector[]{sslConnector});
-
-    context.setErrorHandler(new ErrorHandler());
+//    HttpConfiguration https = new HttpConfiguration();
+//    https.addCustomizer(new SecureRequestCustomizer());
+//
+//    // Configuring SSL
+//    SslContextFactory.Server sslServer = new SslContextFactory.Server();
+//
+//    // Defining keystore path and passwords
+//    sslServer.setKeyStorePath("/home/ec2-user/cert.pkcs12");
+//    sslServer.setKeyStorePassword("longGOOGshortVIX");
+//    sslServer.setKeyManagerPassword("longGOOGshortVIX");
+//
+//    // Configuring the connector
+//    ServerConnector sslConnector = new ServerConnector(server, new SslConnectionFactory(sslServer, "http/1.1"), new HttpConnectionFactory(https));
+//    sslConnector.setPort(1700);
+//
+//    // Setting HTTP and HTTPS connectors
+//    server.setConnectors(new Connector[]{sslConnector});
+//
+//    context.setErrorHandler(new ErrorHandler());
 
 //    FilterHolder cors = context.addFilter(CrossOriginFilter.class,"/*", EnumSet.of(DispatcherType.REQUEST));
 //    cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");

@@ -66,7 +66,7 @@ public class GameEngine {
                     || player.getyPos() + player.getRadius() > lowerYboundary || player.getyPos() - player.getRadius() < upperYboundary) {
                 targetXVelocity /= 2;
                 targetYVelocity /= 2;
-                if (player.takeDamage(1)) {
+                if (player.takeDamage(2)) {
                     removePlayers.add(player);
                 }
             }
@@ -74,6 +74,7 @@ public class GameEngine {
             player.setyVelocity(targetYVelocity);
         }
         for (Player player : removePlayers) {
+            player.sendDisconnect();
             players.remove(player.getId());
         }
     }
@@ -95,7 +96,7 @@ public class GameEngine {
             public void run() {
                 executeGameLoopIteration();
             }
-        }, 0, 20);
+        }, 0, 15);
     }
 
     private void executeGameLoopIteration() {
@@ -139,6 +140,7 @@ public class GameEngine {
         }
         projectiles.removeAll(removeProjectiles);
         for (Player player : removePlayers) {
+            player.sendDisconnect();
             players.remove(player.getId());
         }
     }
@@ -155,6 +157,7 @@ public class GameEngine {
             }
         }
         for (Player player : removePlayers) {
+            player.sendDisconnect();
             players.remove(player.getId());
         }
     }

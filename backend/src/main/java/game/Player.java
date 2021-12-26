@@ -24,7 +24,7 @@ public class Player {
         this.id = id;
         this.name = name;
         this.socket = socket;
-        this.weapon = new BasicWeapon(20);
+        this.weapon = new BasicWeapon(15);
         this.currentAngle = 0;
     }
 
@@ -126,7 +126,12 @@ public class Player {
         }
     }
 
-
+    public void sendDisconnect() {
+        JSONObject message = new JSONObject();
+        message.put("message type", "disconnected");
+        message.put("id", id);
+        sendInfo(message.toString());
+    }
 
 
     public void sendInfo(String message) {

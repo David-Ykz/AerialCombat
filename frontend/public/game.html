@@ -25,7 +25,7 @@ Image by rawpixel.com
   var angle = 0;
   var mouseDownTimeout;
 
-  // const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
+  //const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
   const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
   socket.on('open', () => {
     console.log('socket opened');
