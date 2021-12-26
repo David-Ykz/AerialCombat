@@ -107,6 +107,7 @@ public class Player {
         message.put("xPos", xPos);
         message.put("yPos", yPos);
         message.put("health", health);
+        message.put("angle", currentAngle);
 
         return message;
     }
