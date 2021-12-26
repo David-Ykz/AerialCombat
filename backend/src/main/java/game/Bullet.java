@@ -5,7 +5,7 @@ public class Bullet extends Projectile {
         super(xPos, yPos, xVelocity, yVelocity, playerID);
         setRange(1000);
         setSpeed(18);
-        setDamage(100);
+        setDamage(20);
     }
 
     public boolean checkCollision(Player player) {

@@ -1,16 +1,10 @@
 package game;
 
-
-import static com.google.common.collect.ImmutableList.toImmutableList;
-
 import com.google.common.collect.ImmutableList;
-import io.socket.engineio.parser.Packet;
-import io.socket.engineio.server.EngineIoSocket;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.ArrayList;
@@ -181,7 +175,7 @@ public class GameEngine {
             gameInfo.put("upperYboundary", upperYboundary);
             gameInfo.put("lowerYboundary", lowerYboundary);
 
-            copiedPlayers = players.values().stream().collect(toImmutableList());
+            copiedPlayers = ImmutableList.copyOf(players.values());
         }
 
         for (Player player : copiedPlayers) {
