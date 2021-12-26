@@ -36,6 +36,7 @@ public class GameEngine {
 
 
     public synchronized void updatePlayerVelocity() {
+        ArrayList<Player> removePlayers = new ArrayList<>();
         for (Player player : players.values()) {
             double currentAngle = player.getCurrentAngle();
             double targetAngle = player.getTargetAngle();
@@ -61,14 +62,19 @@ public class GameEngine {
             }
             double targetXVelocity = player.getSpeed() * Math.cos(Math.toRadians(player.getCurrentAngle()));
             double targetYVelocity = player.getSpeed() * Math.sin(Math.toRadians(player.getCurrentAngle()));
-//            if (player.getxPos() + player.getRadius() > upperXboundary || player.getxPos() - player.getRadius() < lowerXboundary
-//                    || player.getyPos() + player.getRadius() > lowerYboundary || player.getyPos() - player.getRadius() < upperYboundary) {
-//                targetXVelocity /= 2;
-//                targetYVelocity /= 2;
-//                player.takeDamage(1);
-//            }
+            if (player.getxPos() + player.getRadius() > upperXboundary || player.getxPos() - player.getRadius() < lowerXboundary
+                    || player.getyPos() + player.getRadius() > lowerYboundary || player.getyPos() - player.getRadius() < upperYboundary) {
+                targetXVelocity /= 2;
+                targetYVelocity /= 2;
+                if (player.takeDamage(1)) {
+                    removePlayers.add(player);
+                }
+            }
             player.setxVelocity(-targetXVelocity);
             player.setyVelocity(targetYVelocity);
+        }
+        for (Player player : removePlayers) {
+            players.remove(player.getId());
         }
     }
 
