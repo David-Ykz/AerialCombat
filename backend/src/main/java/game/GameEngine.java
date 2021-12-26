@@ -80,8 +80,11 @@ public class GameEngine {
 
     public synchronized void fireProjectile(int id) {
         Player player = players.get(id);
-        Projectile projectile = player.fireBullet(player.getCurrentAngle());
-        projectiles.add(projectile);
+        if (player.getWeapon().readyToFire()) {
+            Projectile projectile = player.fireBullet(player.getCurrentAngle());
+            projectiles.add(projectile);
+            player.getWeapon().setReload();
+        }
     }
 
     public void runGame() {

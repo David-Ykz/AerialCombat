@@ -44,6 +44,15 @@ public class Player {
             return false;
         }
     }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
+    }
+
     public double getxPos() {
         return xPos;
     }
