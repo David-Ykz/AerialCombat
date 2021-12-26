@@ -16,12 +16,16 @@ public class Player {
     private double yVelocity;
     private Weapon weapon;
     private int radius = 10;
+    private double currentAngle;
+    private double targetAngle;
+
 
     public Player(int id, String name, EngineIoSocket socket) {
         this.id = id;
         this.name = name;
         this.socket = socket;
         this.weapon = new BasicWeapon(5);
+        this.currentAngle = 0;
     }
 
     public int getId() { return id; }
@@ -59,6 +63,18 @@ public class Player {
         return weapon.shootProjectile(xPos, yPos, angle, id);
     }
 
+    public double getCurrentAngle() {
+        return currentAngle;
+    }
+    public void setCurrentAngle(double currentAngle) {
+        this.currentAngle = currentAngle;
+    }
+    public double getTargetAngle() {
+        return targetAngle;
+    }
+    public void setTargetAngle(double targetAngle) {
+        this.targetAngle = targetAngle;
+    }
 
     public double getxVelocity() {
         return xVelocity;

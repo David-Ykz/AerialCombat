@@ -29,7 +29,7 @@ public final class GameSocketServlet extends WebSocketServlet {
         if (message.getString("type").equals("playerjoin")) {
             onPlayerJoin(message.getInt("id"), message.getString("name"), socket);
         } else if (message.getString("type").equals("updateplayer")) {
-            game.updatePlayerVelocity(message.getInt("id"), message.getDouble("angle"));
+            game.changePlayerVelocity(message.getInt("id"), message.getDouble("angle"));
         } else if (message.getString("type").equals("shootbullet")){
             game.fireProjectile(message.getInt("id"), message.getDouble("angle"));
         } else {

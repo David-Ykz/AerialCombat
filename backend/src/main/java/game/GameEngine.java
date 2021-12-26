@@ -22,7 +22,8 @@ public class GameEngine {
     private final int lowerXboundary = -4000;
     private final int upperYboundary = -500;
     private final int lowerYboundary = 1000;
-    private final double acceleration = 0.5;
+    private final double accelerationLimit = 1;
+    private final double maxAngleChange = 5;
 
     public synchronized void addPlayer(Player player) {
         players.put(player.getId(), player);
@@ -33,26 +34,83 @@ public class GameEngine {
         players.remove(playerId);
     }
 
-    public synchronized void updatePlayerVelocity(int id, double angle) {
+    public synchronized void changePlayerVelocity(int id, double angle) {
         Player player = players.get(id);
-        double targetXVelocity;
-        double targetYVelocity;
-        if (player.getxPos() + player.getRadius() > upperXboundary || player.getxPos() - player.getRadius() < lowerXboundary
-        || player.getyPos() + player.getRadius() > lowerYboundary || player.getyPos() - player.getRadius() < upperYboundary) {
-            targetXVelocity = player.getSpeed() * Math.cos(Math.toRadians(angle)) / 2;
-            targetYVelocity = player.getSpeed() * Math.sin(Math.toRadians(angle)) / 2;
-            player.takeDamage(1);
-        } else {
-            targetXVelocity = player.getSpeed() * Math.cos(Math.toRadians(angle));
-            targetYVelocity = player.getSpeed() * Math.sin(Math.toRadians(angle));
-        }
-        player.setxVelocity(-targetXVelocity);
-        player.setyVelocity(targetYVelocity);
+        player.setTargetAngle(angle);
+    }
 
+
+
+    public synchronized void updatePlayerVelocity() {
+        for (Player player : players.values()) {
+            double currentAngle = player.getCurrentAngle();
+            double targetAngle = player.getTargetAngle();
+//            System.out.println("current angle: " + currentAngle + " target angle: " + targetAngle);
+            if (Math.abs(targetAngle - currentAngle) <= maxAngleChange) {
+                player.setCurrentAngle(targetAngle);
+            } else if (targetAngle <= 180) {
+                if (currentAngle > targetAngle && currentAngle < targetAngle + 180) {
+                    player.setCurrentAngle(currentAngle - maxAngleChange);
+                } else {
+                    player.setCurrentAngle(currentAngle + maxAngleChange);
+                }
+            } else {
+                if (currentAngle < targetAngle && currentAngle > targetAngle - 180) {
+                    player.setCurrentAngle(currentAngle + maxAngleChange);
+                } else {
+                    player.setCurrentAngle(currentAngle - maxAngleChange);
+                }
+            }
+
+            player.setCurrentAngle(player.getCurrentAngle() % 360);
+            if (player.getCurrentAngle() < 0) {
+                player.setCurrentAngle(360 + player.getCurrentAngle());
+            }
+            double targetXVelocity = player.getSpeed() * Math.cos(Math.toRadians(player.getCurrentAngle()));
+            double targetYVelocity = player.getSpeed() * Math.sin(Math.toRadians(player.getCurrentAngle()));
+//            if (player.getxPos() + player.getRadius() > upperXboundary || player.getxPos() - player.getRadius() < lowerXboundary
+//                    || player.getyPos() + player.getRadius() > lowerYboundary || player.getyPos() - player.getRadius() < upperYboundary) {
+//                targetXVelocity /= 2;
+//                targetYVelocity /= 2;
+//                player.takeDamage(1);
+//            }
+            player.setxVelocity(-targetXVelocity);
+            player.setyVelocity(targetYVelocity);
+        }
+
+
+
+
+//        double xAcceleration = accelerationLimit * Math.cos(Math.toRadians(angle));
+//        double yAcceleration = accelerationLimit * Math.sin(Math.toRadians(angle));
+////        System.out.println(Math.abs(targetXVelocity) + Math.abs(targetYVelocity));
+//
+//        if (player.getxPos() + player.getRadius() > upperXboundary || player.getxPos() - player.getRadius() < lowerXboundary
+//        || player.getyPos() + player.getRadius() > lowerYboundary || player.getyPos() - player.getRadius() < upperYboundary) {
+//            xAcceleration = xAcceleration / 2;
+//            yAcceleration = yAcceleration / 2;
+//            player.takeDamage(1);
+//        }
+//
+//
+//        double newVelocityX = player.getxVelocity() - xAcceleration;
+//        double newVelocityY = player.getyVelocity() + yAcceleration;
+//        double speed = Math.sqrt(newVelocityX * newVelocityX + newVelocityY * newVelocityY);
+//
+//        if (speed >= player.getSpeed()) {
+//            newVelocityX = newVelocityX / speed * player.getSpeed();
+//            newVelocityY = newVelocityY / speed * player.getSpeed();
+//        }
+//
+//
+//
+//        player.setxVelocity(newVelocityX);
+//        player.setyVelocity(newVelocityY);
+//
 //        if (targetXVelocity - player.getxVelocity() <= acceleration) {
-//            player.setxVelocity(targetXVelocity);
+//            player.setxVelocity(player.getxVelocity() - targetXVelocity);
 //        } else {
-//            player.setxVelocity(acceleration * targetXVelocity / Math.abs(targetXVelocity));
+//            player.setxVelocity(player.getxVelocity() - acceleration);
 //        }
 //        if (targetYVelocity - player.getyVelocity() <= acceleration) {
 //            player.setyVelocity(targetYVelocity);
@@ -79,6 +137,7 @@ public class GameEngine {
     }
 
     private void executeGameLoopIteration() {
+        updatePlayerVelocity();
         updatePlayerPos();
         updateProjectilePos();
         checkProjectileCollisions();
