@@ -32,7 +32,7 @@ class Home extends React.Component {
     return (
       <div>
         <br/><br/>
-        <h1>Dogfight</h1>
+        <h1>Aerial Combat</h1>
         <Form>
           <Form.Group>
             <Form.Label>Your Name:</Form.Label>

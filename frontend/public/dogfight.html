@@ -1,5 +1,6 @@
 <html>
 <canvas id="myCanvas" width="1024" height="768"></canvas>
+Image by rawpixel.com
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/engine.io-client/3.4.3/engine.io.min.js"></script>
 
@@ -14,7 +15,13 @@
   const playerName = urlParams.get('playerName') == null ? 'john doe' : urlParams.get('playerName');
 
   var gameState = {};
-  var obstacles = [{xPos: 10, yPos: 20}, {xPos: 100, yPos: 200}];
+  // TODO: Better way of generating random obstacles within boundaries.
+  var obstacles = [];
+  for (var i =0 ; i < 15; i++) {
+    obstacles.push({xPos: Math.floor(Math.random() * 3000) - 2000, yPos: Math.floor(Math.random() * 1000) - 500});
+  }
+  cloud = new Image();
+  cloud.src = 'cloud.png';
   var angle = 0;
   var mouseDownTimeout;
 
@@ -86,6 +93,7 @@
   function draw() {
     window.requestAnimationFrame(draw);
     var canvas = document.getElementById('myCanvas');
+    canvas.style.background = "#87CEFA";
     var ctx = canvas.getContext('2d');
 
     // Clear screen before redrawing.
@@ -103,13 +111,13 @@
     }
 
     // Draw boundaries.
-    drawRect(ctx, gameState.upperXboundary - myX + SCREEN_MIDDLE_X, -10000, 10000, 20000, '#E6E6FA');
-    drawRect(ctx, gameState.lowerXboundary - myX + SCREEN_MIDDLE_X - 20000, -10000, 20000, 20000, '#E6E6FA');
-    drawRect(ctx, -10000, gameState.upperYboundary - myY + SCREEN_MIDDLE_Y - 10000, 20000, 10000, '#E6E6FA');
-    drawRect(ctx, -10000, gameState.lowerYboundary - myY + SCREEN_MIDDLE_Y, 20000, 10000, '#E6E6FA');
+    drawRect(ctx, gameState.upperXboundary - myX + SCREEN_MIDDLE_X, -10000, 10000, 20000, '#00BFFF');
+    drawRect(ctx, gameState.lowerXboundary - myX + SCREEN_MIDDLE_X - 20000, -10000, 20000, 20000, '#00BFFF');
+    drawRect(ctx, -10000, gameState.upperYboundary - myY + SCREEN_MIDDLE_Y - 10000, 20000, 10000, '#00BFFF');
+    drawRect(ctx, -10000, gameState.lowerYboundary - myY + SCREEN_MIDDLE_Y, 20000, 10000, '#00BFFF');
 
     for (const obstacle of obstacles) {
-      drawCircle(ctx, obstacle.xPos - myX + SCREEN_MIDDLE_X, obstacle.yPos - myY + SCREEN_MIDDLE_Y, 10, 'blue');
+      drawCloud(ctx, obstacle.xPos - myX + SCREEN_MIDDLE_X, obstacle.yPos - myY + SCREEN_MIDDLE_Y);
     }
 
     for (const player of gameState.players) {
@@ -158,6 +166,10 @@
     ctx.fillStyle = color;
     ctx.fill();
     ctx.closePath();
+  }
+
+  function drawCloud(ctx, x, y) {
+    ctx.drawImage(cloud, x, y);
   }
 
   draw();
