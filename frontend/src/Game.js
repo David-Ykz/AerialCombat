@@ -136,7 +136,7 @@ class Game extends React.Component {
     return (
       <div>
         <br/><br/>
-        <h1>Dogfight</h1>
+        <h1>Aerial Combat</h1>
         <br/>
         <canvas ref="canvas" width={{SCREEN_WIDTH}} height={{SCREEN_HEIGHT}}/>
       </div>
