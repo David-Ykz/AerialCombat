@@ -102,6 +102,16 @@
       }
     }
 
+    // Draw boundaries.
+    drawRect(ctx, gameState.upperXboundary - myX + SCREEN_MIDDLE_X, -10000, 10000, 20000, '#E6E6FA');
+    drawRect(ctx, gameState.lowerXboundary - myX + SCREEN_MIDDLE_X - 20000, -10000, 20000, 20000, '#E6E6FA');
+    drawRect(ctx, -10000, gameState.upperYboundary - myY + SCREEN_MIDDLE_Y - 10000, 20000, 10000, '#E6E6FA');
+    drawRect(ctx, -10000, gameState.lowerYboundary - myY + SCREEN_MIDDLE_Y, 20000, 10000, '#E6E6FA');
+
+    for (const obstacle of obstacles) {
+      drawCircle(ctx, obstacle.xPos - myX + SCREEN_MIDDLE_X, obstacle.yPos - myY + SCREEN_MIDDLE_Y, 10, 'blue');
+    }
+
     for (const player of gameState.players) {
       const color = player.id == playerId ? 'green' : 'red';
       drawCircle(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, 10, color);
@@ -110,9 +120,6 @@
     }
     for (const projectile of gameState.projectiles) {
       drawCircle(ctx, projectile.xPos - myX + SCREEN_MIDDLE_X, projectile.yPos - myY + SCREEN_MIDDLE_Y, 2, 'black');
-    }
-    for (const obstacle of obstacles) {
-      drawCircle(ctx, obstacle.xPos - myX + SCREEN_MIDDLE_X, obstacle.yPos - myY + SCREEN_MIDDLE_Y, 10, 'blue');
     }
   }
 
@@ -143,6 +150,14 @@
       ctx.fillStyle = "#11ff00";
       ctx.fill();
       ctx.closePath();
+  }
+
+  function drawRect(ctx, x, y, width, height, color='#410765') {
+    ctx.beginPath();
+    ctx.rect(x,y,width,height);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.closePath();
   }
 
   draw();

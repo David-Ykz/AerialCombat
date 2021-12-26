@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class GameEngine {
     private HashMap<Integer, Player> players = new HashMap<>();
     private ArrayList<Projectile> projectiles = new ArrayList<>();
-    private final int upperXboundary = 4000;
-    private final int lowerXboundary = -4000;
+    private final int upperXboundary = 2000;
+    private final int lowerXboundary = -2000;
     private final int upperYboundary = -500;
     private final int lowerYboundary = 1000;
     private final double accelerationLimit = 1;
@@ -158,9 +158,6 @@ public class GameEngine {
             players.remove(player.getId());
         }
     }
-
-
-
 
     private void sendGameInfo() {
         JSONObject gameInfo = new JSONObject();
