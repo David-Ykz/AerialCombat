@@ -79,7 +79,6 @@ public class Main {
 //    cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,HEAD,SERVICE");
 //    cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin");
 
-    gameEngine.runGame();
     System.out.println("server start");
 
     server.start();

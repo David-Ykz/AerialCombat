@@ -10,22 +10,36 @@ import java.util.TimerTask;
 import java.util.ArrayList;
 
 public class GameEngine {
-    private HashMap<Integer, Player> players = new HashMap<>();
-    private ArrayList<Projectile> projectiles = new ArrayList<>();
+    private final HashMap<Integer, Player> players = new HashMap<>();
+    private final ArrayList<Projectile> projectiles = new ArrayList<>();
     private final int upperXboundary = 2000;
     private final int lowerXboundary = -2000;
     private final int upperYboundary = -500;
     private final int lowerYboundary = 1000;
     private final double accelerationLimit = 1;
     private final double maxAngleChange = 5;
+    private final Timer gameLoopTimer = new Timer();
+    private TimerTask currentGameLoopTask;
 
     public synchronized void addPlayer(Player player) {
+        if (players.isEmpty()) {
+            startGame();
+        }
         players.put(player.getId(), player);
     }
 
     public synchronized void removePlayer(int playerId) {
-        projectiles.removeIf(projectile -> projectile.getPlayerID() == playerId);
+        removePlayer(playerId, false);
+    }
+
+    public synchronized void removePlayer(int playerId, boolean alsoRemovePlayerProjectiles) {
+        if (alsoRemovePlayerProjectiles) {
+            projectiles.removeIf(projectile -> projectile.getPlayerID() == playerId);
+        }
         players.remove(playerId);
+        if (players.isEmpty()) {
+            endGame();
+        }
     }
 
     public synchronized void changePlayerVelocity(int id, double angle) {
@@ -33,14 +47,11 @@ public class GameEngine {
         player.setTargetAngle(angle);
     }
 
-
-
     public synchronized void updatePlayerVelocity() {
         ArrayList<Player> removePlayers = new ArrayList<>();
         for (Player player : players.values()) {
             double currentAngle = player.getCurrentAngle();
             double targetAngle = player.getTargetAngle();
-//            System.out.println("current angle: " + currentAngle + " target angle: " + targetAngle);
             if (Math.abs(targetAngle - currentAngle) <= maxAngleChange) {
                 player.setCurrentAngle(targetAngle);
             } else if (targetAngle <= 180) {
@@ -75,7 +86,7 @@ public class GameEngine {
         }
         for (Player player : removePlayers) {
             player.sendGameOver();
-            players.remove(player.getId());
+            removePlayer(player.getId());
         }
     }
 
@@ -88,15 +99,20 @@ public class GameEngine {
         }
     }
 
-    public void runGame() {
-        Timer timer = new Timer();
-
-        timer.schedule(new TimerTask() {
+    private synchronized void startGame() {
+        System.out.println("Starting game.");
+        currentGameLoopTask = new TimerTask() {
             @Override
             public void run() {
                 executeGameLoopIteration();
             }
-        }, 0, 15);
+        };
+        gameLoopTimer.schedule(currentGameLoopTask, 0, 15);
+    }
+
+    private synchronized void endGame() {
+        System.out.println("Ending game.");
+        currentGameLoopTask.cancel();
     }
 
     private void executeGameLoopIteration() {
@@ -141,7 +157,7 @@ public class GameEngine {
         projectiles.removeAll(removeProjectiles);
         for (Player player : removePlayers) {
             player.sendGameOver();
-            players.remove(player.getId());
+            removePlayer(player.getId());
         }
     }
 
@@ -158,7 +174,7 @@ public class GameEngine {
         }
         for (Player player : removePlayers) {
             player.sendGameOver();
-            players.remove(player.getId());
+            removePlayer(player.getId());
         }
     }
 
