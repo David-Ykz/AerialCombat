@@ -2,11 +2,12 @@ package game;
 
 public abstract class Weapon {
     private int reloadTime;
-    private int currentReload = 0;
+    private int currentReload;
     private String name;
 
     Weapon(int reloadTime, String name) {
         this.reloadTime = reloadTime;
+        this.currentReload = reloadTime;
         this.name = name;
     }
 
@@ -16,9 +17,7 @@ public abstract class Weapon {
         } else {
             return false;
         }
-
     }
-
 
     public void increaseCurrentReoad() {
         currentReload++;
