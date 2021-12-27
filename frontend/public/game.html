@@ -45,6 +45,8 @@ Clouds - Image by rawpixel.com
   rocketImg.src = 'rocket.png';
   const parachuteImg = new Image(32, 32);
   parachuteImg.src = 'parachute.png';
+  const tripleshotImg = new Image(32, 32);
+  tripleshotImg.src = 'tripleshot.png';
 
   const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
   // const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
@@ -150,12 +152,18 @@ Clouds - Image by rawpixel.com
     }
 
     for (const powerup of gameState.powerups) {
+      var powerupImg;
       if (powerup.name == 'bomb') {
-        drawPowerUp(ctx, bombImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
+        powerupImg = bombImg;
       } else if (powerup.name == 'medkit') {
-        drawPowerUp(ctx, medBoxImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
+        powerupImg = medBoxImg;
       } else if (powerup.name == 'rocket') {
-        drawPowerUp(ctx, rocketImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
+        powerupImg = rocketImg;
+      } else if (powerup.name == 'tripleshot') {
+        powerupImg = tripleshotImg;
+      }
+      if (powerupImg != null) {
+        drawPowerUp(ctx, powerupImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
       }
     }
 
@@ -177,6 +185,8 @@ Clouds - Image by rawpixel.com
       currentWeaponImg = bombImg;
     } else if (myPlayer.weapon == 'rocketweapon') {
       currentWeaponImg = rocketImg;
+    } else if (myPlayer.weapon == 'tripleshotweapon') {
+      currentWeaponImg = tripleshotImg;
     }
     if (currentWeaponImg != null) {
       console.log('drawing');

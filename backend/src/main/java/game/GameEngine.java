@@ -164,7 +164,7 @@ public class GameEngine {
 
     private synchronized void createPowerup() {
         int powerupChoice = (int)(Math.random() * 6);
-        double randomXPos = Math.random() * upperXboundary - lowerXboundary;
+        double randomXPos = Math.random() * 2 * upperXboundary + lowerXboundary;
         Powerup powerup;
 
         if (powerupChoice == 1) {
