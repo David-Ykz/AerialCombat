@@ -121,7 +121,7 @@ public class GameEngine {
         checkProjectileCollisions();
         checkPlayerCollision();
         checkPowerupCollision();
-        if (Math.random() > 0.9) {
+        if (Math.random() > 0.95) {
             createPowerup();
         }
         sendGameInfo();
@@ -161,7 +161,9 @@ public class GameEngine {
         Powerup powerup;
 
         if (powerupChoice == 1) {
-            powerup = new Powerup(new RocketWeapon(60), randomXPos, upperYboundary, "rocket");
+            powerup = new Powerup(new RocketWeapon(70), randomXPos, upperYboundary, "rocket");
+        } else if (powerupChoice == 2) {
+            powerup = new Powerup(new BombWeapon(40), randomXPos, upperYboundary, "bomb");
         } else {
             powerup = new Powerup(null, randomXPos, upperYboundary, "medkit");
         }
