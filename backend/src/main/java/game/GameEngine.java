@@ -128,7 +128,7 @@ public class GameEngine {
         checkProjectileCollisions();
         checkPlayerCollision();
         checkPowerupCollision();
-        if (Math.random() > 0.95) {
+        if (Math.random() > 0.98) {
             createPowerup();
         }
         sendGameInfo();
@@ -164,7 +164,7 @@ public class GameEngine {
 
     private synchronized void createPowerup() {
         int powerupChoice = (int)(Math.random() * 6);
-        double randomXPos = Math.random() * (Math.abs(lowerXboundary) + upperXboundary);
+        double randomXPos = Math.random() * (Math.abs(lowerXboundary) + upperXboundary) - lowerXboundary;
         Powerup powerup;
 
         if (powerupChoice == 1) {
