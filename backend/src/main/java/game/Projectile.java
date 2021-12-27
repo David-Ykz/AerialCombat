@@ -19,6 +19,7 @@ public abstract class Projectile {
     public Projectile(double xPos, double yPos, double angle, int playerID) {
         this.xVelocity = Math.cos(Math.toRadians(angle));
         this.yVelocity = Math.sin(Math.toRadians(angle));
+        this.angle = angle;
         this.xPos = xPos;
         this.yPos = yPos;
         this.playerID = playerID;
