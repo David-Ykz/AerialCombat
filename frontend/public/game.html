@@ -7,6 +7,7 @@ Clouds - Image by rawpixel.com
 <a target="_blank" href="https://icons8.com/icon/iesmzwuTdYDg/bombImg">bombImg</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 <a target="_blank" href="https://icons8.com/icon/eVRlPdxRxmNe/medical-box">Medical Box</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 <a target="_blank" href="https://icons8.com/icon/117057/missile">Missile</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+<a target="_blank" href="https://icons8.com/icon/12430/parachute">Parachute</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/engine.io-client/3.4.3/engine.io.min.js"></script>
 
@@ -42,6 +43,8 @@ Clouds - Image by rawpixel.com
   medBoxImg.src = 'med_box.png';
   const rocketImg = new Image(32, 32);
   rocketImg.src = 'rocket.png';
+  const parachuteImg = new Image(32, 32);
+  parachuteImg.src = 'parachute.png';
 
   const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
   // const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
@@ -148,11 +151,11 @@ Clouds - Image by rawpixel.com
 
     for (const powerup of gameState.powerups) {
       if (powerup.name == 'bomb') {
-        drawImage(ctx, bombImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
+        drawPowerUp(ctx, bombImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
       } else if (powerup.name == 'medkit') {
-        drawImage(ctx, medBoxImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
+        drawPowerUp(ctx, medBoxImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
       } else if (powerup.name == 'rocket') {
-        drawImage(ctx, rocketImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
+        drawPowerUp(ctx, rocketImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
       }
     }
 
@@ -192,6 +195,11 @@ Clouds - Image by rawpixel.com
     ctx.rotate(-angle * Math.PI / 180);
     ctx.drawImage(image, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+  function drawPowerUp(ctx, image, xCenter, yCenter, width, height) {
+    drawImage(ctx, parachuteImg, xCenter, yCenter - height, width, height);
+    drawImage(ctx, image, xCenter, yCenter, width, height);
   }
 
   function drawImage(ctx, image, xCenter, yCenter, width, height) {
