@@ -6,7 +6,7 @@ public class Bomb extends Projectile {
         setRange(1500);
         setSpeed(9);
         setDamage(100);
-        setRadius(24);
+        setRadius(22);
         setName("bomb");
     }
 

@@ -45,7 +45,7 @@ public class Powerup {
 
         double distance = Math.sqrt((xPos - playerX) * (xPos - playerX) + (yPos - playerY) * (yPos - playerY));
 
-        if (distance <= playerRadius + radius) {
+        if (distance <= 2 * playerRadius + radius) {
             return true;
         } else {
             return false;
