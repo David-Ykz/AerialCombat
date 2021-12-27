@@ -31,28 +31,17 @@ Clouds - Image by rawpixel.com
   var mouseDownTimeout;
   var isGameOver = false;
 
-  const cloud = new Image();
-  cloud.src = 'cloud.png';
-  const airplaneWhiteImg = new Image(32, 32);
-  airplaneWhiteImg.src = 'airplane_white.png';
-  const airplaneBlackImg = new Image(32, 32);
-  airplaneBlackImg.src = 'airplane_black.png';
-  const bombPowerupImg = new Image(32, 32);
-  bombPowerupImg.src = 'bomb_powerup.png';
-  const bombProjectileImg = new Image(32, 32);
-  bombProjectileImg.src = 'bomb_projectile.png';
-  const medBoxImg = new Image(32, 32);
-  medBoxImg.src = 'med_box_powerup.png';
-  const rocketPowerupImg = new Image(32, 32);
-  rocketPowerupImg.src = 'rocket_powerup.png';
-  const rocketProjectileImg = new Image(32, 32);
-  rocketProjectileImg.src = 'rocket_projectile.png';
-  const parachuteImg = new Image(32, 32);
-  parachuteImg.src = 'parachute.png';
-  const tripleshotImg = new Image(32, 32);
-  tripleshotImg.src = 'tripleshot_powerup.png';
-  const bulletImg = new Image(32, 32);
-  bulletImg.src = 'bullet_projectile.png';
+  const cloud = loadImage('cloud.png');
+  const airplaneWhiteImg = loadImage('airplane_white.png', 32, 32);
+  const airplaneBlackImg = loadImage('airplane_black.png', 32, 32);
+  const bombPowerupImg = loadImage('bomb_powerup.png', 32, 32);
+  const bombProjectileImg = loadImage('bomb_projectile.png', 32, 32);
+  const medBoxImg = loadImage('med_box_powerup.png', 32, 32);
+  const rocketPowerupImg = loadImage('rocket_powerup.png', 32, 32);
+  const rocketProjectileImg = loadImage('rocket_projectile.png', 32, 32);
+  const parachuteImg = loadImage('parachute.png', 32, 32);
+  const tripleshotImg = loadImage('tripleshot_powerup.png', 32, 32);
+  const bulletImg = loadImage('bullet_projectile.png', 32, 32);
 
   const powerupImages = {
     'bomb': bombPowerupImg,
@@ -269,6 +258,17 @@ Clouds - Image by rawpixel.com
 
   function drawCloud(ctx, x, y) {
     ctx.drawImage(cloud, x, y);
+  }
+
+  function loadImage(imageSrc, width, height) {
+    var img;
+    if (width != null && height != null) {
+      img = new Image(width, height);
+    } else {
+      img = new Image();
+    }
+    img.src = imageSrc;
+    return img;
   }
 
   draw();
