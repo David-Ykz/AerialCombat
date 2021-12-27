@@ -91,7 +91,7 @@ public class GameEngine {
     public synchronized void fireProjectile(int id) {
         Player player = players.get(id);
         if (player.getWeapon().readyToFire()) {
-            if (player.getWeapon().getName().equals("tripleshot")) {
+            if (player.getWeapon().getName().equals("tripleshotweapon")) {
                 for (int i = 1; i <= 3; i++) {
                     Projectile projectile = player.fireBullet(player.getCurrentAngle() + i * 15 - 30);
                     projectiles.add(projectile);
