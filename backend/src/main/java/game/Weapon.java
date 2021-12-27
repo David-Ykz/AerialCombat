@@ -11,13 +11,17 @@ public abstract class Weapon {
     }
 
     public boolean readyToFire() {
-        currentReload++;
         if (currentReload >= reloadTime) {
             return true;
         } else {
             return false;
         }
 
+    }
+
+
+    public void increaseCurrentReoad() {
+        currentReload++;
     }
 
     public void setReload() {

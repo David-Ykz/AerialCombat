@@ -138,6 +138,7 @@ public class GameEngine {
         for (Player player : players.values()) {
             player.setxPos(player.getxPos() - player.getxVelocity());
             player.setyPos(player.getyPos() - player.getyVelocity());
+            player.getWeapon().increaseCurrentReoad();
         }
     }
 
