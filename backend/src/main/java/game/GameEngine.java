@@ -15,7 +15,7 @@ public class GameEngine {
     private final int upperYboundary = -500;
     private final int lowerYboundary = 1000;
     private final double accelerationLimit = 1;
-    private final double maxAngleChange = 5;
+    private final double maxAngleChange = 10;
     private final Timer gameLoopTimer = new Timer();
     private TimerTask currentGameLoopTask;
 
