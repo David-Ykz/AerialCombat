@@ -24,7 +24,7 @@ public class Player {
         this.id = id;
         this.name = name;
         this.socket = socket;
-        this.weapon = new BasicWeapon(15);
+        this.weapon = new BasicWeapon(15, "basicweapon");
         this.currentAngle = 0;
     }
 
@@ -113,6 +113,7 @@ public class Player {
         message.put("health", health);
         message.put("angle", currentAngle);
         message.put("radius", radius);
+        message.put("weapon", weapon.getName());
 
         return message;
     }

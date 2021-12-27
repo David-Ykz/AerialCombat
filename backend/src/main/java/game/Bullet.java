@@ -1,8 +1,8 @@
 package game;
 
 public class Bullet extends Projectile {
-    public Bullet(double xPos, double yPos, double xVelocity, double yVelocity, int playerID) {
-        super(xPos, yPos, xVelocity, yVelocity, playerID);
+    public Bullet(double xPos, double yPos, double xVelocity, double yVelocity, int playerID, int radius) {
+        super(xPos, yPos, xVelocity, yVelocity, playerID, radius);
         setRange(1000);
         setSpeed(18);
         setDamage(20);

@@ -3,9 +3,11 @@ package game;
 public abstract class Weapon {
     private int reloadTime;
     private int currentReload = 0;
+    private String name;
 
-    Weapon(int reloadTime) {
+    Weapon(int reloadTime, String name) {
         this.reloadTime = reloadTime;
+        this.name = name;
     }
 
     public boolean readyToFire() {
@@ -27,6 +29,9 @@ public abstract class Weapon {
     abstract Projectile shootProjectile(double xPos, double yPos, double angle, int playerID);
 
 
+    public String getName() {
+        return this.name;
+    }
 }
 
 

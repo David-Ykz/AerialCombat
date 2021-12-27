@@ -1,8 +1,8 @@
 package game;
 
 public class RocketWeapon extends Weapon {
-    public RocketWeapon(int reloadTime) {
-        super(reloadTime);
+    public RocketWeapon(int reloadTime, String name) {
+        super(reloadTime, name);
     }
 
     public Projectile shootProjectile(double xPos, double yPos, double angle, int playerID) {

@@ -11,14 +11,16 @@ public abstract class Projectile {
     private int speed;
     private int damage;
     private final int playerID;
+    private int radius;
 
 
-    public Projectile(double xPos, double yPos, double xVelocity, double yVelocity, int playerID) {
+    public Projectile(double xPos, double yPos, double xVelocity, double yVelocity, int playerID, int radius) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.xVelocity = xVelocity;
         this.yVelocity = yVelocity;
         this.playerID = playerID;
+        this.radius = radius;
     }
 
     public double getxPos() {
@@ -46,7 +48,9 @@ public abstract class Projectile {
     public void setRange(double range) { this.range = range; }
     public void setSpeed(int speed) { this.speed = speed; }
     public void setDamage(int damage) { this.damage = damage; }
-
+    public int getRadius() {
+        return this.radius;
+    }
 
     public JSONObject toJSON() {
         JSONObject message = new JSONObject();
@@ -54,6 +58,7 @@ public abstract class Projectile {
         message.put("name", getClass().toString());
         message.put("xPos", xPos);
         message.put("yPos", yPos);
+        message.put("radius", radius);
         return message;
     }
 

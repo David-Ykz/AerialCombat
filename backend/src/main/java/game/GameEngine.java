@@ -91,8 +91,15 @@ public class GameEngine {
     public synchronized void fireProjectile(int id) {
         Player player = players.get(id);
         if (player.getWeapon().readyToFire()) {
-            Projectile projectile = player.fireBullet(player.getCurrentAngle());
-            projectiles.add(projectile);
+            if (player.getWeapon().getName().equals("tripleshot")) {
+                for (int i = 1; i <= 3; i++) {
+                    Projectile projectile = player.fireBullet(player.getCurrentAngle() + i * 15 - 30);
+                    projectiles.add(projectile);
+                }
+            } else {
+                Projectile projectile = player.fireBullet(player.getCurrentAngle());
+                projectiles.add(projectile);
+            }
             player.getWeapon().setReload();
         }
     }
@@ -161,15 +168,14 @@ public class GameEngine {
         Powerup powerup;
 
         if (powerupChoice == 1) {
-            powerup = new Powerup(new RocketWeapon(70), randomXPos, upperYboundary, "rocket");
+            powerup = new Powerup(new RocketWeapon(70, "rocketweapon"), randomXPos, upperYboundary, "rocket");
         } else if (powerupChoice == 2) {
-            powerup = new Powerup(new BombWeapon(40), randomXPos, upperYboundary, "bomb");
+            powerup = new Powerup(new BombWeapon(40, "bombweapon"), randomXPos, upperYboundary, "bomb");
+        } else if (powerupChoice == 3) {
+            powerup = new Powerup(new TripleShotWeapon(20, "tripleshotweapon"), randomXPos, upperYboundary, "tripleshot");
         } else {
             powerup = new Powerup(null, randomXPos, upperYboundary, "medkit");
         }
-
-
-
         powerups.add(powerup);
     }
 
