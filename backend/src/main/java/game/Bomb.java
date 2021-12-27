@@ -1,11 +1,13 @@
 package game;
 
 public class Bomb extends Projectile {
-    public Bomb(double xPos, double yPos, double xVelocity, double yVelocity, int playerID, int radius) {
-        super(xPos, yPos, xVelocity, yVelocity, playerID, radius);
+    public Bomb(double xPos, double yPos, double angle, int playerID) {
+        super(xPos, yPos, angle, playerID);
         setRange(1500);
         setSpeed(9);
         setDamage(100);
+        setRadius(12);
+        setName("bomb");
     }
 
     public boolean checkCollision(Player player) {

@@ -1,11 +1,13 @@
 package game;
 
 public class Bullet extends Projectile {
-    public Bullet(double xPos, double yPos, double xVelocity, double yVelocity, int playerID, int radius) {
-        super(xPos, yPos, xVelocity, yVelocity, playerID, radius);
+    public Bullet(double xPos, double yPos, double angle, int playerID) {
+        super(xPos, yPos, angle, playerID);
         setRange(1000);
         setSpeed(18);
         setDamage(20);
+        setRadius(5);
+        setName("bullet");
     }
 
     public boolean checkCollision(Player player) {
@@ -24,7 +26,6 @@ public class Bullet extends Projectile {
             a = slope * slope + 1;
             b = 2 * (slope * (yIntercept - playerY) - playerX);
             c = playerX * playerX + (yIntercept - playerY) * (yIntercept - playerY) - playerRadius * playerRadius;
-
         }
 
         if (b * b - 4 * a * c >= 0 &&

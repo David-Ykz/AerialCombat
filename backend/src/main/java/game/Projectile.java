@@ -5,6 +5,7 @@ import org.json.JSONObject;
 public abstract class Projectile {
     private double xPos;
     private double yPos;
+    private double angle;
     private double xVelocity;
     private double yVelocity;
     private double range;
@@ -12,15 +13,15 @@ public abstract class Projectile {
     private int damage;
     private final int playerID;
     private int radius;
+    private String name;
 
 
-    public Projectile(double xPos, double yPos, double xVelocity, double yVelocity, int playerID, int radius) {
+    public Projectile(double xPos, double yPos, double angle, int playerID) {
+        this.xVelocity = Math.cos(Math.toRadians(angle));
+        this.yVelocity = Math.sin(Math.toRadians(angle));
         this.xPos = xPos;
         this.yPos = yPos;
-        this.xVelocity = xVelocity;
-        this.yVelocity = yVelocity;
         this.playerID = playerID;
-        this.radius = radius;
     }
 
     public double getxPos() {
@@ -51,11 +52,20 @@ public abstract class Projectile {
     public int getRadius() {
         return this.radius;
     }
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public String getName() { return this.name; }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public JSONObject toJSON() {
         JSONObject message = new JSONObject();
         message.put("id", playerID);
-        message.put("name", getClass().toString());
+        message.put("name", name);
         message.put("xPos", xPos);
         message.put("yPos", yPos);
         message.put("radius", radius);

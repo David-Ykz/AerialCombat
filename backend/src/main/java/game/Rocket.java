@@ -2,11 +2,13 @@ package game;
 
 public class Rocket extends Projectile {
 
-    public Rocket(double xPos, double yPos, double xVelocity, double yVelocity, int playerID, int radius) {
-        super(xPos, yPos, xVelocity, yVelocity, playerID, radius);
+    public Rocket(double xPos, double yPos, double angle, int playerID) {
+        super(xPos, yPos, angle, playerID);
         setRange(2400);
         setSpeed(34);
         setDamage(100);
+        setRadius(8);
+        setName("rocket");
     }
 
     public boolean checkCollision(Player player) {
