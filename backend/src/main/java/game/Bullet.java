@@ -6,7 +6,7 @@ public class Bullet extends Projectile {
         setRange(1000);
         setSpeed(18);
         setDamage(20);
-        setRadius(5);
+        setRadius(8);
         setName("bullet");
     }
 

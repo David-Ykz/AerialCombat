@@ -15,7 +15,7 @@ public class Player {
     private double xVelocity;
     private double yVelocity;
     private Weapon weapon;
-    private int radius = 10;
+    private int radius = 20;
     private double currentAngle;
     private double targetAngle;
 

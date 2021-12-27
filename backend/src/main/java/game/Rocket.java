@@ -7,7 +7,7 @@ public class Rocket extends Projectile {
         setRange(2400);
         setSpeed(34);
         setDamage(100);
-        setRadius(8);
+        setRadius(16);
         setName("rocket");
     }
 
