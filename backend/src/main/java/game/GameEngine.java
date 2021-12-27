@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.ArrayList;
+import java.util.*;
 
 public class GameEngine {
     private final HashMap<Integer, Player> players = new HashMap<>();
@@ -161,7 +158,16 @@ public class GameEngine {
     private synchronized void createPowerup() {
         int powerupChoice = (int)(Math.random() * 6);
         double randomXPos = Math.random() * (Math.abs(lowerXboundary) + upperXboundary);
-        Powerup powerup = new Powerup(null, randomXPos, upperYboundary, "medkit");
+        Powerup powerup;
+
+        if (powerupChoice == 1) {
+            powerup = new Powerup(new RocketWeapon(60), randomXPos, upperYboundary, "rocket");
+        } else {
+            powerup = new Powerup(null, randomXPos, upperYboundary, "medkit");
+        }
+
+
+
         powerups.add(powerup);
     }
 
