@@ -57,6 +57,8 @@ public class Powerup {
     public void acquirePowerup(Player player) {
         if (storedWeapon == null) {
             player.setHealth(100);
+        } else {
+            player.setWeapon(storedWeapon);
         }
     }
 

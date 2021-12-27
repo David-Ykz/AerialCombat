@@ -112,6 +112,7 @@ public class Player {
         message.put("yPos", yPos);
         message.put("health", health);
         message.put("angle", currentAngle);
+        message.put("radius", radius);
 
         return message;
     }
