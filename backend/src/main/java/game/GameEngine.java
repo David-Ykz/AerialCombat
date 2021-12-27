@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class GameEngine {
     private final HashMap<Integer, Player> players = new HashMap<>();
     private final ArrayList<Projectile> projectiles = new ArrayList<>();
+    private ArrayList<Powerup> powerups = new ArrayList<>();
     private final int upperXboundary = 2000;
     private final int lowerXboundary = -2000;
     private final int upperYboundary = -500;
@@ -141,6 +142,21 @@ public class GameEngine {
         projectiles.removeAll(removeProjectiles);
     }
 
+    private synchronized void updatePowerupPos() {
+        ArrayList<Powerup> removePowerups = new ArrayList<>();
+        for (Powerup powerup : powerups) {
+            powerup.setyPos(powerup.getyPos() + powerup.getGravity());
+            if (powerup.getyPos() >= lowerYboundary) {
+                removePowerups.add(powerup);
+            }
+        }
+        powerups.removeAll(removePowerups);
+    }
+
+    private synchronized void createPowerup() {
+        int powerupChoice = (int)(Math.random() * 6);
+    }
+
     private synchronized void checkProjectileCollisions() {
         ArrayList<Projectile> removeProjectiles = new ArrayList<>();
         ArrayList<Player> removePlayers = new ArrayList<>();
@@ -177,6 +193,11 @@ public class GameEngine {
             removePlayer(player.getId());
         }
     }
+
+    
+
+
+
 
     private void sendGameInfo() {
         JSONObject gameInfo = new JSONObject();

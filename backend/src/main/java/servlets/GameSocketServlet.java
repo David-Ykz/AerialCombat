@@ -28,6 +28,7 @@ public final class GameSocketServlet extends WebSocketServlet {
         JSONObject message = new JSONObject(rawMessage);
         if (message.getString("type").equals("playerjoin")) {
             onPlayerJoin(message.getInt("id"), message.getString("name"), socket);
+
         } else if (message.getString("type").equals("updateplayer")) {
             game.changePlayerVelocity(message.getInt("id"), message.getDouble("angle"));
         } else if (message.getString("type").equals("shootbullet")){
