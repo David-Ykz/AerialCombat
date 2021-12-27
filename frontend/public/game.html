@@ -54,11 +54,24 @@ Clouds - Image by rawpixel.com
   const bulletImg = new Image(32, 32);
   bulletImg.src = 'bullet_projectile.png';
 
+  const powerupImages = {
+    'bomb': bombPowerupImg,
+    'medkit': medBoxImg,
+    'rocket': rocketPowerupImg,
+    'tripleshot': tripleshotImg
+  };
+
   const projectileImages = {
     'bullet': bulletImg,
     'bomb': bombProjectileImg,
     'rocket': rocketProjectileImg,
     'tripleshot': bulletImg
+  };
+
+  const currentWeaponImages = {
+    'bombweapon': bombPowerupImg,
+    'rocketweapon': rocketPowerupImg,
+    'tripleshotweapon': tripleshotImg
   };
 
   const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
@@ -68,7 +81,6 @@ Clouds - Image by rawpixel.com
     socket.send(JSON.stringify({type: 'playerjoin', id: playerId, name: playerName}));
     socket.on('message', (data) => {
       const msg = JSON.parse(data);
-      console.log(msg);
       if (msg.type == 'gameInfo') {
         gameState = msg;
       } else if (msg.type == 'gameOver') {
@@ -165,19 +177,7 @@ Clouds - Image by rawpixel.com
     }
 
     for (const powerup of gameState.powerups) {
-      var powerupImg;
-      if (powerup.name == 'bomb') {
-        powerupImg = bombPowerupImg;
-      } else if (powerup.name == 'medkit') {
-        powerupImg = medBoxImg;
-      } else if (powerup.name == 'rocket') {
-        powerupImg = rocketPowerupImg;
-      } else if (powerup.name == 'tripleshot') {
-        powerupImg = tripleshotImg;
-      }
-      if (powerupImg != null) {
-        drawPowerUp(ctx, powerupImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
-      }
+      drawPowerUp(ctx, powerupImages[powerup.name], powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
     }
 
     for (const player of gameState.players) {
@@ -193,14 +193,7 @@ Clouds - Image by rawpixel.com
     }
 
     // Draw current user weapon.
-    var currentWeaponImg;
-    if (myPlayer.weapon == 'bombweapon') {
-      currentWeaponImg = bombPowerupImg;
-    } else if (myPlayer.weapon == 'rocketweapon') {
-      currentWeaponImg = rocketPowerupImg;
-    } else if (myPlayer.weapon == 'tripleshotweapon') {
-      currentWeaponImg = tripleshotImg;
-    }
+    var currentWeaponImg = currentWeaponImages[myPlayer.weapon];
     if (currentWeaponImg != null) {
       drawImage(ctx, currentWeaponImg, 50, 50, 64, 64);
     }
