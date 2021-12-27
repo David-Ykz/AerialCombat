@@ -4,7 +4,7 @@
 Clouds - Image by rawpixel.com
 <br/>
 <a target="_blank" href="https://icons8.com/icon/E3jrJhWWAvey/airplane">Airplane</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
-<a target="_blank" href="https://icons8.com/icon/iesmzwuTdYDg/bombImg">bombImg</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+<a target="_blank" href="https://icons8.com/icon/iesmzwuTdYDg/bomb">bomb</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 <a target="_blank" href="https://icons8.com/icon/eVRlPdxRxmNe/medical-box">Medical Box</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 <a target="_blank" href="https://icons8.com/icon/117057/missile">Missile</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 <a target="_blank" href="https://icons8.com/icon/12430/parachute">Parachute</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
@@ -37,16 +37,29 @@ Clouds - Image by rawpixel.com
   airplaneWhiteImg.src = 'airplane_white.png';
   const airplaneBlackImg = new Image(32, 32);
   airplaneBlackImg.src = 'airplane_black.png';
-  const bombImg = new Image(32, 32);
-  bombImg.src = 'bomb.png';
+  const bombPowerupImg = new Image(32, 32);
+  bombPowerupImg.src = 'bomb_powerup.png';
+  const bombProjectileImg = new Image(32, 32);
+  bombProjectileImg.src = 'bomb_projectile.png';
   const medBoxImg = new Image(32, 32);
-  medBoxImg.src = 'med_box.png';
-  const rocketImg = new Image(32, 32);
-  rocketImg.src = 'rocket.png';
+  medBoxImg.src = 'med_box_powerup.png';
+  const rocketPowerupImg = new Image(32, 32);
+  rocketPowerupImg.src = 'rocket_powerup.png';
+  const rocketProjectileImg = new Image(32, 32);
+  rocketProjectileImg.src = 'rocket_projectile.png';
   const parachuteImg = new Image(32, 32);
   parachuteImg.src = 'parachute.png';
   const tripleshotImg = new Image(32, 32);
-  tripleshotImg.src = 'tripleshot.png';
+  tripleshotImg.src = 'tripleshot_powerup.png';
+  const bulletImg = new Image(32, 32);
+  bulletImg.src = 'bullet_projectile.png';
+
+  const projectileImages = {
+    'bullet': bulletImg,
+    'bomb': bombProjectileImg,
+    'rocket': rocketProjectileImg,
+    'tripleshot': bulletImg
+  };
 
   const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
   // const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
@@ -154,11 +167,11 @@ Clouds - Image by rawpixel.com
     for (const powerup of gameState.powerups) {
       var powerupImg;
       if (powerup.name == 'bomb') {
-        powerupImg = bombImg;
+        powerupImg = bombPowerupImg;
       } else if (powerup.name == 'medkit') {
         powerupImg = medBoxImg;
       } else if (powerup.name == 'rocket') {
-        powerupImg = rocketImg;
+        powerupImg = rocketPowerupImg;
       } else if (powerup.name == 'tripleshot') {
         powerupImg = tripleshotImg;
       }
@@ -176,20 +189,19 @@ Clouds - Image by rawpixel.com
     }
 
     for (const projectile of gameState.projectiles) {
-      drawCircle(ctx, projectile.xPos - myX + SCREEN_MIDDLE_X, projectile.yPos - myY + SCREEN_MIDDLE_Y, 2, 'black');
+      drawProjectile(ctx, projectile, projectile.xPos - myX + SCREEN_MIDDLE_X, projectile.yPos - myY + SCREEN_MIDDLE_Y);
     }
 
     // Draw current user weapon.
     var currentWeaponImg;
     if (myPlayer.weapon == 'bombweapon') {
-      currentWeaponImg = bombImg;
+      currentWeaponImg = bombPowerupImg;
     } else if (myPlayer.weapon == 'rocketweapon') {
-      currentWeaponImg = rocketImg;
+      currentWeaponImg = rocketPowerupImg;
     } else if (myPlayer.weapon == 'tripleshotweapon') {
       currentWeaponImg = tripleshotImg;
     }
     if (currentWeaponImg != null) {
-      console.log('drawing');
       drawImage(ctx, currentWeaponImg, 50, 50, 64, 64);
     }
 
@@ -210,6 +222,17 @@ Clouds - Image by rawpixel.com
   function drawPowerUp(ctx, image, xCenter, yCenter, width, height) {
     drawImage(ctx, parachuteImg, xCenter, yCenter - height, width, height);
     drawImage(ctx, image, xCenter, yCenter, width, height);
+  }
+
+  function drawProjectile(ctx, projectile, x, y) {
+    if (projectile.name == 'bullet') {
+      drawCircle(ctx, x, y, 2, 'black');
+    } else {
+      ctx.setTransform(1, 0, 0, 1, x, y);
+      ctx.rotate(-projectile.angle * Math.PI / 180);
+      ctx.drawImage(projectileImages[projectile.name], -projectile.radius, -projectile.radius, projectile.radius * 2, projectile.radius * 2);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
   }
 
   function drawImage(ctx, image, xCenter, yCenter, width, height) {
