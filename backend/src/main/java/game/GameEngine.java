@@ -161,7 +161,7 @@ public class GameEngine {
     private synchronized void createPowerup() {
         int powerupChoice = (int)(Math.random() * 6);
         double randomXPos = Math.random() * (Math.abs(lowerXboundary) + upperXboundary);
-        Powerup powerup = new Powerup(null, randomXPos, upperYboundary);
+        Powerup powerup = new Powerup(null, randomXPos, upperYboundary, "medkit");
         powerups.add(powerup);
     }
 
@@ -238,7 +238,7 @@ public class GameEngine {
                 powerupInfo.put(powerup.toJSON());
             }
             gameInfo.put("powerups", powerupInfo);
-            
+
             gameInfo.put("upperXboundary", upperXboundary);
             gameInfo.put("lowerXboundary", lowerXboundary);
             gameInfo.put("upperYboundary", upperYboundary);

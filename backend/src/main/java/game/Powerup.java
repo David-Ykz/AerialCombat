@@ -4,14 +4,16 @@ import org.json.JSONObject;
 
 public class Powerup {
     private Weapon storedWeapon;
+    private String name;
     private double xPos, yPos;
     private double radius;
     private double gravity;
 
-    public Powerup(Weapon storedWeapon, double xPos, double yPos) {
+    public Powerup(Weapon storedWeapon, double xPos, double yPos, String name) {
         this.storedWeapon = storedWeapon;
         this.xPos = xPos;
         this.yPos = yPos;
+        this.name = name;
         this.gravity = 3;
         this.radius = 15;
     }
@@ -61,7 +63,7 @@ public class Powerup {
 
     public JSONObject toJSON() {
         JSONObject message = new JSONObject();
-        message.put("name", storedWeapon.getClass().toString());
+        message.put("name", name);
         message.put("xPos", xPos);
         message.put("yPos", yPos);
         message.put("radius", radius);
