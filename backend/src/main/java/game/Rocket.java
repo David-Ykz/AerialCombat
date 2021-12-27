@@ -2,8 +2,8 @@ package game;
 
 public class Rocket extends Projectile {
 
-    public Rocket(double xPos, double yPos, double xVelocity, double yVelocity, int playerID) {
-        super(xPos, yPos, xVelocity, yVelocity, playerID);
+    public Rocket(double xPos, double yPos, double xVelocity, double yVelocity, int playerID, int radius) {
+        super(xPos, yPos, xVelocity, yVelocity, playerID, radius);
         setRange(2400);
         setSpeed(34);
         setDamage(100);
