@@ -184,8 +184,8 @@ Clouds - Image by rawpixel.com
       const airplane = player.id == playerId ? airplaneBlackImg : airplaneWhiteImg;
       const color = player.id == playerId ? 'green' : 'red';
       drawAirplane(ctx, airplane, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, player.angle, player.radius * 2, player.radius * 2);
-      drawText(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y + 20, player.name, 'center', color, font='12px Arial');
-      drawHealthBar(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, player.health);
+      drawText(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y + 30, player.name, 'center', color, font='12px Arial');
+      drawHealthBar(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y - 5, player.health);
     }
 
     for (const projectile of gameState.projectiles) {
