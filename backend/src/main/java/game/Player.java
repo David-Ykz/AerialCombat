@@ -85,6 +85,10 @@ public class Player {
         this.targetAngle = targetAngle;
     }
 
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
     public double getxVelocity() {
         return xVelocity;
     }
@@ -117,9 +121,9 @@ public class Player {
         double playerY = player.getyPos();
         double playerRadius = player.getRadius();
 
-        double distance = Math.sqrt((getxPos() - playerX) * (getxPos() - playerX) + (getyPos() - playerY) * (getyPos() - playerY));
+        double distance = Math.sqrt((xPos - playerX) * (xPos - playerX) + (yPos - playerY) * (yPos - playerY));
 
-        if (distance <= playerRadius + getRadius()) {
+        if (distance <= playerRadius + radius) {
             return true;
         } else {
             return false;

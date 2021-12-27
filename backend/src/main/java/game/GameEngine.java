@@ -120,8 +120,13 @@ public class GameEngine {
         updatePlayerVelocity();
         updatePlayerPos();
         updateProjectilePos();
+        updatePowerupPos();
         checkProjectileCollisions();
         checkPlayerCollision();
+        checkPowerupCollision();
+        if (Math.random() > 0.9) {
+            createPowerup();
+        }
         sendGameInfo();
     }
 
@@ -155,6 +160,9 @@ public class GameEngine {
 
     private synchronized void createPowerup() {
         int powerupChoice = (int)(Math.random() * 6);
+        double randomXPos = Math.random() * (Math.abs(lowerXboundary) + upperXboundary);
+        Powerup powerup = new Powerup(null, randomXPos, upperYboundary);
+        powerups.add(powerup);
     }
 
     private synchronized void checkProjectileCollisions() {
@@ -169,8 +177,8 @@ public class GameEngine {
                     }
                 }
             }
+            projectiles.removeAll(removeProjectiles);
         }
-        projectiles.removeAll(removeProjectiles);
         for (Player player : removePlayers) {
             player.sendGameOver();
             removePlayer(player.getId());
@@ -194,7 +202,18 @@ public class GameEngine {
         }
     }
 
-    
+    public synchronized void checkPowerupCollision() {
+        ArrayList<Powerup> removePowerups = new ArrayList<>();
+        for (Player player : players.values()) {
+            for (Powerup powerup : powerups) {
+                if (powerup.checkCollision(player)) {
+                    powerup.acquirePowerup(player);
+                    removePowerups.add(powerup);
+                }
+            }
+            powerups.removeAll(removePowerups);
+        }
+    }
 
 
 
@@ -206,6 +225,7 @@ public class GameEngine {
         synchronized (this) {
             JSONArray playerInfo = new JSONArray();
             JSONArray projectileInfo = new JSONArray();
+            JSONArray powerupInfo = new JSONArray();
             for (Player player : players.values()) {
                 playerInfo.put(player.toJSON());
             }
@@ -214,6 +234,11 @@ public class GameEngine {
                 projectileInfo.put(projectile.toJSON());
             }
             gameInfo.put("projectiles", projectileInfo);
+            for (Powerup powerup : powerups) {
+                powerupInfo.put(powerup.toJSON());
+            }
+            gameInfo.put("powerups", powerupInfo);
+            
             gameInfo.put("upperXboundary", upperXboundary);
             gameInfo.put("lowerXboundary", lowerXboundary);
             gameInfo.put("upperYboundary", upperYboundary);
