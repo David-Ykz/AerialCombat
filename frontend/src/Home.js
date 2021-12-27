@@ -14,6 +14,7 @@ class Home extends React.Component {
     };
 
     this.onNameChange = this.onNameChange.bind(this);
+    this.detectEnterSubmit = this.detectEnterSubmit.bind(this);
     this.playGame = this.playGame.bind(this);
   }
 
@@ -22,6 +23,13 @@ class Home extends React.Component {
 
   onNameChange(event) {
     this.setState({ playerName: event.target.value });
+  }
+
+  detectEnterSubmit(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      this.playGame();
+    }
   }
 
   playGame() {
@@ -36,7 +44,7 @@ class Home extends React.Component {
         <Form>
           <Form.Group>
             <Form.Label>Your Name:</Form.Label>
-            <Form.Control type="text" onChange={this.onNameChange} value={this.state.playerName} />
+            <Form.Control type="text" onChange={this.onNameChange} onKeyDown={this.detectEnterSubmit} value={this.state.playerName} />
           </Form.Group>
         </Form>
         <br/>
