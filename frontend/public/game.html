@@ -225,14 +225,10 @@ Clouds - Image by rawpixel.com
   }
 
   function drawProjectile(ctx, projectile, x, y) {
-    if (projectile.name == 'bullet') {
-      drawCircle(ctx, x, y, 2, 'black');
-    } else {
-      ctx.setTransform(1, 0, 0, 1, x, y);
-      ctx.rotate(-projectile.angle * Math.PI / 180);
-      ctx.drawImage(projectileImages[projectile.name], -projectile.radius, -projectile.radius, projectile.radius * 2, projectile.radius * 2);
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-    }
+    ctx.setTransform(1, 0, 0, 1, x, y);
+    ctx.rotate(-projectile.angle * Math.PI / 180);
+    ctx.drawImage(projectileImages[projectile.name], -projectile.radius, -projectile.radius, projectile.radius * 2, projectile.radius * 2);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
   function drawImage(ctx, image, xCenter, yCenter, width, height) {
