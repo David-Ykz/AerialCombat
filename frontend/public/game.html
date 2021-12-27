@@ -50,6 +50,7 @@ Clouds - Image by rawpixel.com
     socket.send(JSON.stringify({type: 'playerjoin', id: playerId, name: playerName}));
     socket.on('message', (data) => {
       const msg = JSON.parse(data);
+      console.log(msg);
       if (msg.type == 'gameInfo') {
         gameState = msg;
       } else if (msg.type == 'gameOver') {
@@ -122,6 +123,7 @@ Clouds - Image by rawpixel.com
     // Clear screen before redrawing.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    var myPlayer;
     var myX;
     var myY;
 
@@ -129,6 +131,7 @@ Clouds - Image by rawpixel.com
       if (player.id == playerId) {
         myX = player.xPos;
         myY = player.yPos;
+        myPlayer = player;
         break;
       }
     }
@@ -148,7 +151,7 @@ Clouds - Image by rawpixel.com
         drawImage(ctx, bombImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
       } else if (powerup.name == 'medkit') {
         drawImage(ctx, medBoxImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
-      } else if (powerup.name == 'rocketImg') {
+      } else if (powerup.name == 'rocket') {
         drawImage(ctx, rocketImg, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
       }
     }
@@ -156,13 +159,25 @@ Clouds - Image by rawpixel.com
     for (const player of gameState.players) {
       const airplane = player.id == playerId ? airplaneBlackImg : airplaneWhiteImg;
       const color = player.id == playerId ? 'green' : 'red';
-      drawAirplane(ctx, airplane, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, player.angle);
-      drawText(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y + 30, player.name, 'center', color, font='12px Arial');
-      drawHealthBar(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y - 10, player.health);
+      drawAirplane(ctx, airplane, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, player.angle, player.radius * 2, player.radius * 2);
+      drawText(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y + 20, player.name, 'center', color, font='12px Arial');
+      drawHealthBar(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, player.health);
     }
 
     for (const projectile of gameState.projectiles) {
       drawCircle(ctx, projectile.xPos - myX + SCREEN_MIDDLE_X, projectile.yPos - myY + SCREEN_MIDDLE_Y, 2, 'black');
+    }
+
+    // Draw current user weapon.
+    var currentWeaponImg;
+    if (myPlayer.weapon == 'bombweapon') {
+      currentWeaponImg = bombImg;
+    } else if (myPlayer.weapon == 'rocketweapon') {
+      currentWeaponImg = rocketImg;
+    }
+    if (currentWeaponImg != null) {
+      console.log('drawing');
+      drawImage(ctx, currentWeaponImg, 50, 50, 64, 64);
     }
 
     if (isGameOver) {
@@ -170,17 +185,19 @@ Clouds - Image by rawpixel.com
     }
   }
 
-  function drawAirplane(ctx, image, xCenter, yCenter, angle) {
+  function drawAirplane(ctx, image, xCenter, yCenter, angle, width, height) {
+    const imgWidth = width == null ? image.width : width;
+    const imgHeight = height == null ? image.height : height;
     ctx.setTransform(1, 0, 0, 1, xCenter, yCenter); // sets scale and origin
     ctx.rotate(-angle * Math.PI / 180);
-    ctx.drawImage(image, -image.width / 2, -image.height / 2, image.width, image.height);
+    ctx.drawImage(image, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
   function drawImage(ctx, image, xCenter, yCenter, width, height) {
     const imgWidth = width == null ? image.width : width;
     const imgHeight = height == null ? image.height : height;
-    ctx.drawImage(image, xCenter - image.width / 2, yCenter - image.height / 2, imgWidth, imgHeight);
+    ctx.drawImage(image, xCenter - width / 2, yCenter - height / 2, imgWidth, imgHeight);
   }
 
   function drawCircle(ctx, x, y, r, color='#b8e015') {
