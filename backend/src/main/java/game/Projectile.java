@@ -69,6 +69,7 @@ public abstract class Projectile {
         message.put("xPos", xPos);
         message.put("yPos", yPos);
         message.put("radius", radius);
+        message.put("angle", angle);
         return message;
     }
 
