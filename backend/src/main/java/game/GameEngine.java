@@ -205,7 +205,7 @@ public class GameEngine {
         for (Player player : players.values()) {
             for (Player otherPlayer : players.values()) {
                 if (otherPlayer.getId() != player.getId() && player.checkCollision(otherPlayer)) {
-                    if (player.takeDamage(25)) {
+                    if (player.takeDamage(5)) {
                         removePlayers.add(player);
                     }
                 }
