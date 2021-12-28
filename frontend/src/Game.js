@@ -25,7 +25,14 @@ class Game extends React.Component {
 
     this.backgroundCloudLocations = this.generateBackgroundCloudLocations(NUM_BACKGROUND_CLOUDS);
     this.gameState = {players: [], projectiles: [], powerups: []};
-    this.clientSocket = new Socket(constants.GAME_SOCKET_ADDRESS, {path: '/engine.io/game', reconnection: true, reconnectionDelay: 10, reconnectionAttempts: 10});
+    this.clientSocket = new Socket(constants.GAME_SOCKET_ADDRESS, {
+      path: '/engine.io/game',
+      reconnection: true,
+      reconnectionDelay: 10,
+      reconnectionAttempts: 10,
+      transports: ['websocket'],
+      upgrade: false
+    });
     this.mouseDownTimeout = null;
     this.isGameOver = false;
 
@@ -65,6 +72,11 @@ class Game extends React.Component {
           console.log('game over');
         }
       });
+      // Send heartbeat message to avoid strange disconnect error.
+      setInterval(() => {
+        console.log('sending');
+        this.clientSocket.send(JSON.stringify({type: 'heartbeat'}));
+      }, 1000);
       document.addEventListener("mousemove", this.onMouseMove, false);
       document.addEventListener("mousedown", this.onMouseDown, false);
       document.addEventListener("mouseup", this.onMouseUp, false);

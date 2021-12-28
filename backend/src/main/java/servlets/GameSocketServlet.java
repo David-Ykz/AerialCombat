@@ -8,10 +8,13 @@ import io.socket.engineio.server.EngineIoSocket;
 import org.json.JSONObject;
 
 public final class GameSocketServlet extends WebSocketServlet {
+    private final JSONObject heartBeatMsg;
     private GameEngine game;
     public GameSocketServlet(EngineIoServer engineIoServer, GameEngine game) {
         super(engineIoServer);
         this.game = game;
+        this.heartBeatMsg = new JSONObject();
+        this.heartBeatMsg.put("type", "heartbeat");
         engineIoServer.on("connection", (Object... args) -> {
             onConnect((EngineIoSocket) args[0]);
         });
@@ -32,6 +35,8 @@ public final class GameSocketServlet extends WebSocketServlet {
             game.changePlayerVelocity(message.getInt("id"), message.getDouble("angle"));
         } else if (message.getString("type").equals("shootbullet")){
             game.fireProjectile(message.getInt("id"));
+        } else if (message.getString("type").equals("heartbeat")) {
+            socket.send(new Packet<>(Packet.MESSAGE, heartBeatMsg));
         } else {
             throw new RuntimeException("Invalid message type " + message.getString("type"));
         }
