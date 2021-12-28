@@ -104,11 +104,17 @@ class Draw {
   }
 
   drawPowerUp(ctx, powerup, xCenter, yCenter, width, height) {
+    if (!(powerup.name in this.powerupImages)) {
+      return;
+    }
     this.drawImage(ctx, this.parachuteImg, xCenter, yCenter - height, width, height);
     this.drawImage(ctx, this.powerupImages[powerup.name], xCenter, yCenter, width, height);
   }
 
   drawProjectile(ctx, projectile, x, y) {
+    if (!(projectile.name in this.projectileImages)) {
+      return;
+    }
     ctx.setTransform(1, 0, 0, 1, x, y);
     ctx.rotate(-projectile.angle * Math.PI / 180);
     ctx.drawImage(this.projectileImages[projectile.name], -projectile.radius, -projectile.radius, projectile.radius * 2 * RENDER_SCALE, projectile.radius * 2 * RENDER_SCALE);
