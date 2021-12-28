@@ -32,7 +32,7 @@ class Home extends React.Component {
   }
 
   playGame() {
-    window.location.href = '/game.html?playerName=' + this.state.playerName;
+    window.location.href = '/game?playerName=' + this.state.playerName;
   }
 
   render() {
