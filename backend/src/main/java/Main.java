@@ -1,9 +1,9 @@
 import game.GameEngine;
 import io.socket.engineio.server.EngineIoServer;
+import io.socket.engineio.server.EngineIoServerOptions;
 import io.socket.engineio.server.JettyWebSocketHandler;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
-import javax.servlet.Servlet;
 import org.eclipse.jetty.http.pathmap.ServletPathSpec;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -55,7 +55,11 @@ public class Main {
     context.setContextPath("/");
     server.setHandler(context);
 
-    EngineIoServer echoServer = new EngineIoServer();
+    // Disable CORS so that servlet can handle this instead.
+    EngineIoServerOptions options = EngineIoServerOptions.newFromDefault();
+    options.setCorsHandlingDisabled(true);
+
+    EngineIoServer echoServer = new EngineIoServer(options);
     WebSocketUpgradeFilter webSocketUpgradeFilter = WebSocketUpgradeFilter.configure(
         context);
     webSocketUpgradeFilter.addMapping(new ServletPathSpec("/engine.io/echo/*"),
@@ -65,7 +69,7 @@ public class Main {
     context.addServlet(new ServletHolder(new EchoSocketServlet(echoServer)),
         "/engine.io/echo/*");
 
-    EngineIoServer gameSocket = new EngineIoServer();
+    EngineIoServer gameSocket = new EngineIoServer(options);
     webSocketUpgradeFilter.addMapping(new ServletPathSpec("/engine.io/game/*"),
             (ServletUpgradeRequest servletUpgradeRequest, ServletUpgradeResponse servletUpgradeResponse) -> new JettyWebSocketHandler(
                     gameSocket));
@@ -76,11 +80,11 @@ public class Main {
 //    initSsl(server);
     context.setErrorHandler(new ErrorHandler());
 
-//    FilterHolder cors = context.addFilter(CrossOriginFilter.class,"/*", EnumSet.of(DispatcherType.REQUEST));
-//    cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
-//    cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
-//    cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,HEAD,SERVICE");
-//    cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin");
+    FilterHolder cors = context.addFilter(CrossOriginFilter.class,"/*", EnumSet.of(DispatcherType.REQUEST));
+    cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+    cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
+    cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,HEAD,SERVICE");
+    cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin");
 
     System.out.println("server start");
 
