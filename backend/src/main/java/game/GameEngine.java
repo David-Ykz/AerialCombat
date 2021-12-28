@@ -151,7 +151,7 @@ public class GameEngine {
         ArrayList<Projectile> removeProjectiles = new ArrayList<>();
         ArrayList<Projectile> addProjectiles = new ArrayList<>();
         for (Projectile projectile : projectiles) {
-            if (!projectile.getName().equals("railgun") && projectile.updatePosition()) {
+            if (projectile.updatePosition()) {
                 if (projectile.getName().equals("shrapnel")) {
                     for (int i = -15; i <= 15; i = i + 5) {
                         double angle = (projectile.getAngle() + i) % 360;
