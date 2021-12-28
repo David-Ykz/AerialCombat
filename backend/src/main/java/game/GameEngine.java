@@ -145,6 +145,9 @@ public class GameEngine {
     private synchronized void updateProjectilePos() {
         ArrayList<Projectile> removeProjectiles = new ArrayList<>();
         for (Projectile projectile : projectiles) {
+            if (projectile.getName().equals("shrapnel")) {
+                projectile.setRadius(projectile.getRadius() + 0.5);
+            }
             if (projectile.updatePosition()) {
                 removeProjectiles.add(projectile);
             }

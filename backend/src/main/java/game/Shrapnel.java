@@ -4,14 +4,13 @@ public class Shrapnel extends Projectile {
     public Shrapnel(double xPos, double yPos, double angle, int playerID) {
         super(xPos, yPos, angle, playerID);
         setRange(900);
-        setSpeed(1);
+        setSpeed(8);
         setDamage(100);
         setRadius(15);
         setName("shrapnel");
     }
 
     public boolean checkCollision(Player player) {
-        setRadius(getRadius() + 1);
         double playerX = player.getxPos();
         double playerY = player.getyPos();
         double playerRadius = player.getRadius();
