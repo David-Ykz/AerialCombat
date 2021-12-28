@@ -10,9 +10,9 @@ public class GameEngine {
     private final HashMap<Integer, Player> players = new HashMap<>();
     private final ArrayList<Projectile> projectiles = new ArrayList<>();
     private ArrayList<Powerup> powerups = new ArrayList<>();
-    private final int upperXboundary = 2000;
-    private final int lowerXboundary = -2000;
-    private final int upperYboundary = -500;
+    private final int upperXboundary = 3000;
+    private final int lowerXboundary = -3000;
+    private final int upperYboundary = -1000;
     private final int lowerYboundary = 1000;
     private final double accelerationLimit = 1;
     private final double maxAngleChange = 10;
@@ -142,6 +142,8 @@ public class GameEngine {
         }
     }
 
+
+
     private synchronized void updateProjectilePos() {
         ArrayList<Projectile> removeProjectiles = new ArrayList<>();
         ArrayList<Projectile> addProjectiles = new ArrayList<>();
@@ -193,11 +195,19 @@ public class GameEngine {
 
     private synchronized void checkProjectileCollisions() {
         ArrayList<Projectile> removeProjectiles = new ArrayList<>();
+        ArrayList<Projectile> addProjectiles = new ArrayList<>();
         ArrayList<Player> removePlayers = new ArrayList<>();
         for (Player player : players.values()) {
             for (Projectile projectile : projectiles) {
                 if (projectile.getPlayerID() != player.getId() && projectile.checkCollision(player)) {
                     removeProjectiles.add(projectile);
+                    if (projectile.getName().equals("shrapnel")) {
+                        for (int i = -15; i <= 15; i = i + 5) {
+                            double angle = (projectile.getAngle() + i) % 360;
+                            Projectile newProjectile = new Bullet(projectile.getxPos(), projectile.getyPos(), angle, projectile.getPlayerID());
+                            addProjectiles.add(newProjectile);
+                        }
+                    }
                     if (player.takeDamage(projectile.getDamage())) {
                         removePlayers.add(player);
                     }
@@ -205,6 +215,7 @@ public class GameEngine {
             }
             projectiles.removeAll(removeProjectiles);
         }
+        projectiles.addAll(addProjectiles);
         for (Player player : removePlayers) {
             player.sendGameOver();
             removePlayer(player.getId());

@@ -5,7 +5,7 @@ public class Shrapnel extends Projectile {
         super(xPos, yPos, angle, playerID);
         setRange(900);
         setSpeed(18);
-        setDamage(100);
+        setDamage(1);
         setRadius(15);
         setName("shrapnel");
     }
@@ -21,4 +21,7 @@ public class Shrapnel extends Projectile {
             return false;
         }
     }
+
+
+
 }
