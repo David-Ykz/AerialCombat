@@ -35,9 +35,11 @@ public class GameEngine {
             projectiles.removeIf(projectile -> projectile.getPlayerID() == playerId);
         }
         Player player = players.get(playerId);
-        Collision newCollision = new Collision(player.getxPos(), player.getyPos());
-        collisions.add(newCollision);
-        players.remove(playerId);
+        if (player != null) {
+            Collision newCollision = new Collision(player.getxPos(), player.getyPos());
+            collisions.add(newCollision);
+            players.remove(playerId);
+        }
         if (players.isEmpty()) {
             endGame();
         }
