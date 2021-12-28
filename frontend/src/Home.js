@@ -1,4 +1,3 @@
-import * as constants from './Constants.js';
 import openSocket from 'socket.io-client';
 
 import React from 'react';
@@ -33,7 +32,7 @@ class Home extends React.Component {
   }
 
   playGame() {
-    window.location.href = constants.GAME_WEB_ADDRESS + '?playerName=' + this.state.playerName;
+    window.location.href = '/game.html?playerName=' + this.state.playerName;
   }
 
   render() {

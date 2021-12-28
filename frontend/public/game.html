@@ -1,4 +1,8 @@
 <html>
+<head>
+  <title>Aerial Combat</title>
+  <link rel="icon" href="airplane_white.png">
+</head>
 <canvas id="myCanvas" width="1024" height="768"></canvas>
 <br/>
 Clouds - Image by rawpixel.com
@@ -16,6 +20,7 @@ Clouds - Image by rawpixel.com
   const SCREEN_HEIGHT = 768;
   const SCREEN_MIDDLE_X = SCREEN_WIDTH / 2;
   const SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
+  const RENDER_SCALE = 1.2;
 
   const urlParams = new URLSearchParams(window.location.search);
   const playerId = urlParams.get('playerId') == null ? Math.floor(Math.random() * 1000000) : urlParams.get('playerId');
@@ -40,6 +45,8 @@ Clouds - Image by rawpixel.com
   const rocketPowerupImg = loadImage('rocket_powerup.png', 32, 32);
   const rocketProjectileImg = loadImage('rocket_projectile.png', 32, 32);
   const parachuteImg = loadImage('parachute.png', 32, 32);
+  const shrapnelPowerupImg = loadImage('shrapnel_powerup.png', 32, 32);
+  const shrapnelProjectile = loadImage('shrapnel_projectile.png', 32, 32);
   const tripleshotImg = loadImage('tripleshot_powerup.png', 32, 32);
   const bulletImg = loadImage('bullet_projectile.png', 32, 32);
 
@@ -47,6 +54,7 @@ Clouds - Image by rawpixel.com
     'bomb': bombPowerupImg,
     'medkit': medBoxImg,
     'rocket': rocketPowerupImg,
+    'shrapnel': shrapnelPowerupImg,
     'tripleshot': tripleshotImg
   };
 
@@ -54,12 +62,14 @@ Clouds - Image by rawpixel.com
     'bullet': bulletImg,
     'bomb': bombProjectileImg,
     'rocket': rocketProjectileImg,
+    'shrapnel': shrapnelProjectile,
     'tripleshot': bulletImg
   };
 
   const currentWeaponImages = {
     'bombweapon': bombPowerupImg,
     'rocketweapon': rocketPowerupImg,
+    'shrapnelweapon': shrapnelPowerupImg,
     'tripleshotweapon': tripleshotImg
   };
 
@@ -165,15 +175,15 @@ Clouds - Image by rawpixel.com
     }
 
     for (const powerup of gameState.powerups) {
-      drawPowerUp(ctx, powerupImages[powerup.name], powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 1.5, powerup.radius * 1.5);
+      drawPowerUp(ctx, powerupImages[powerup.name], powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 2, powerup.radius * 2);
     }
 
     for (const player of gameState.players) {
       const airplane = player.id == playerId ? airplaneBlackImg : airplaneWhiteImg;
       const color = player.id == playerId ? 'green' : 'red';
-      drawAirplane(ctx, airplane, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, player.angle, player.radius * 2, player.radius * 2);
-      drawText(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y + 30, player.name, 'center', color, font='12px Arial');
-      drawHealthBar(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y - 5, player.health);
+      drawAirplane(ctx, airplane, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, player.angle, player.radius * 2 * RENDER_SCALE, player.radius * 2* RENDER_SCALE);
+      drawText(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y + 40, player.name, 'center', color, font='12px Arial');
+      drawHealthBar(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y - 10, player.health);
     }
 
     for (const projectile of gameState.projectiles) {
@@ -208,7 +218,7 @@ Clouds - Image by rawpixel.com
   function drawProjectile(ctx, projectile, x, y) {
     ctx.setTransform(1, 0, 0, 1, x, y);
     ctx.rotate(-projectile.angle * Math.PI / 180);
-    ctx.drawImage(projectileImages[projectile.name], -projectile.radius, -projectile.radius, projectile.radius * 2, projectile.radius * 2);
+    ctx.drawImage(projectileImages[projectile.name], -projectile.radius, -projectile.radius, projectile.radius * 2 * RENDER_SCALE, projectile.radius * 2 * RENDER_SCALE);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
