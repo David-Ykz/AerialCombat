@@ -14,7 +14,6 @@ public class GameEngine {
     private final int lowerXboundary = -3000;
     private final int upperYboundary = -1000;
     private final int lowerYboundary = 1000;
-    private final double accelerationLimit = 1;
     private final double maxAngleChange = 10;
     private final Timer gameLoopTimer = new Timer();
     private TimerTask currentGameLoopTask;
@@ -128,7 +127,7 @@ public class GameEngine {
         checkProjectileCollisions();
         checkPlayerCollision();
         checkPowerupCollision();
-        if (Math.random() > 0.98) {
+        if (Math.random() > 0.99) {
             createPowerup();
         }
         sendGameInfo();
@@ -184,9 +183,11 @@ public class GameEngine {
         } else if (powerupChoice == 2) {
             powerup = new Powerup(new BombWeapon(40, "bombweapon"), randomXPos, upperYboundary, "bomb");
         } else if (powerupChoice == 3) {
-            powerup = new Powerup(new TripleShotWeapon(12, "tripleshotweapon"), randomXPos, upperYboundary, "tripleshot");
+            powerup = new Powerup(new TripleShotWeapon(16, "tripleshotweapon"), randomXPos, upperYboundary, "tripleshot");
         } else if (powerupChoice == 4) {
-            powerup = new Powerup(new ShrapnelWeapon(55, "shrapnelweapon"), randomXPos, upperYboundary, "shrapnel");
+            powerup = new Powerup(new ShrapnelWeapon(25, "shrapnelweapon"), randomXPos, upperYboundary, "shrapnel");
+        } else if (powerupChoice == 5) {
+            powerup = new Powerup(new RailgunWeapon(125, "railgunweapon"), randomXPos, upperYboundary, "railgun");
         } else {
             powerup = new Powerup(null, randomXPos, upperYboundary, "medkit");
         }
@@ -201,14 +202,8 @@ public class GameEngine {
             for (Projectile projectile : projectiles) {
                 if (projectile.getPlayerID() != player.getId() && projectile.checkCollision(player)) {
                     removeProjectiles.add(projectile);
-                    if (projectile.getName().equals("shrapnel")) {
-                        for (int i = -15; i <= 15; i = i + 5) {
-                            double angle = (projectile.getAngle() + i) % 360;
-                            Projectile newProjectile = new Bullet(projectile.getxPos(), projectile.getyPos(), angle, projectile.getPlayerID());
-                            addProjectiles.add(newProjectile);
-                        }
-                    }
                     if (player.takeDamage(projectile.getDamage())) {
+                        players.get(projectile.getPlayerID()).increaseScore(5);
                         removePlayers.add(player);
                     }
                 }

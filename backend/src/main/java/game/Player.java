@@ -16,6 +16,7 @@ public class Player {
     private double yVelocity;
     private Weapon weapon;
     private int radius = 20;
+    private int score;
     private double currentAngle;
     private double targetAngle;
 
@@ -24,8 +25,9 @@ public class Player {
         this.id = id;
         this.name = name;
         this.socket = socket;
-        this.weapon = new BasicWeapon(9, "basicweapon");
+        this.weapon = new BasicWeapon(6, "basicweapon");
         this.currentAngle = 0;
+        this.score = 0;
     }
 
     public int getId() { return id; }
@@ -51,6 +53,19 @@ public class Player {
 
     public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+
+    public void increaseScore(int score) {
+        this.score += score;
     }
 
     public double getxPos() {
@@ -114,6 +129,7 @@ public class Player {
         message.put("angle", currentAngle);
         message.put("radius", radius);
         message.put("weapon", weapon.getName());
+        message.put("score", score);
 
         return message;
     }

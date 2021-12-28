@@ -4,9 +4,9 @@ public class Bomb extends Projectile {
     public Bomb(double xPos, double yPos, double angle, int playerID) {
         super(xPos, yPos, angle, playerID);
         setRange(1500);
-        setSpeed(9);
+        setSpeed(7);
         setDamage(100);
-        setRadius(22);
+        setRadius(18);
         setName("bomb");
     }
 

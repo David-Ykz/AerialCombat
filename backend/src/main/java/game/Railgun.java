@@ -1,14 +1,13 @@
 package game;
 
-public class Rocket extends Projectile {
-
-    public Rocket(double xPos, double yPos, double angle, int playerID) {
+public class Railgun extends Projectile {
+    public Railgun(double xPos, double yPos, double angle, int playerID) {
         super(xPos, yPos, angle, playerID);
-        setRange(2400);
-        setSpeed(30);
+        setRange(10000);
+        setSpeed(100);
         setDamage(100);
-        setRadius(20);
-        setName("rocket");
+        setRadius(4);
+        setName("railgun");
     }
 
     public boolean checkCollision(Player player) {
@@ -27,12 +26,9 @@ public class Rocket extends Projectile {
             a = slope * slope + 1;
             b = 2 * (slope * (yIntercept - playerY) - playerX);
             c = playerX * playerX + (yIntercept - playerY) * (yIntercept - playerY) - playerRadius * playerRadius;
-
         }
 
-        if (b * b - 4 * a * c >= 0 &&
-                playerX + playerRadius >= getxPos() && playerX  - playerRadius <= getxPos() + getxVelocity() * getSpeed() &&
-                playerY + playerRadius >= getyPos() && playerY - playerRadius <= getyPos() - getyVelocity() * getSpeed()) {
+        if (b * b - 4 * a * c >= 0) {
             return true;
         } else {
             return false;

@@ -3,7 +3,7 @@ package game;
 public class Shrapnel extends Projectile {
     public Shrapnel(double xPos, double yPos, double angle, int playerID) {
         super(xPos, yPos, angle, playerID);
-        setRange(900);
+        setRange(500);
         setSpeed(18);
         setDamage(1);
         setRadius(15);

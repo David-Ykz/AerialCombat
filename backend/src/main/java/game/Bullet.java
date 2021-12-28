@@ -5,7 +5,7 @@ public class Bullet extends Projectile {
         super(xPos, yPos, angle, playerID);
         setRange(1000);
         setSpeed(18);
-        setDamage(20);
+        setDamage(10);
         setRadius(8);
         setName("bullet");
     }
