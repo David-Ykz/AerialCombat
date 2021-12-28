@@ -24,7 +24,7 @@ public class Player {
         this.id = id;
         this.name = name;
         this.socket = socket;
-        this.weapon = new BasicWeapon(15, "basicweapon");
+        this.weapon = new BasicWeapon(9, "basicweapon");
         this.currentAngle = 0;
     }
 

@@ -4,7 +4,7 @@ public class Shrapnel extends Projectile {
     public Shrapnel(double xPos, double yPos, double angle, int playerID) {
         super(xPos, yPos, angle, playerID);
         setRange(900);
-        setSpeed(8);
+        setSpeed(18);
         setDamage(100);
         setRadius(15);
         setName("shrapnel");

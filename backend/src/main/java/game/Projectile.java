@@ -50,6 +50,9 @@ public abstract class Projectile {
     public void setRange(double range) { this.range = range; }
     public void setSpeed(int speed) { this.speed = speed; }
     public void setDamage(int damage) { this.damage = damage; }
+    public double getAngle() {
+        return this.angle;
+    }
     public double getRadius() {
         return this.radius;
     }

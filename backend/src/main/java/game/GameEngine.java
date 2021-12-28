@@ -144,15 +144,21 @@ public class GameEngine {
 
     private synchronized void updateProjectilePos() {
         ArrayList<Projectile> removeProjectiles = new ArrayList<>();
+        ArrayList<Projectile> addProjectiles = new ArrayList<>();
         for (Projectile projectile : projectiles) {
-            if (projectile.getName().equals("shrapnel")) {
-                projectile.setRadius(projectile.getRadius() + 0.5);
-            }
             if (projectile.updatePosition()) {
+                if (projectile.getName().equals("shrapnel")) {
+                    for (int i = -15; i <= 15; i = i + 5) {
+                        double angle = (projectile.getAngle() + i) % 360;
+                        Projectile newProjectile = new Bullet(projectile.getxPos(), projectile.getyPos(), angle, projectile.getPlayerID());
+                        addProjectiles.add(newProjectile);
+                    }
+                }
                 removeProjectiles.add(projectile);
             }
         }
         projectiles.removeAll(removeProjectiles);
+        projectiles.addAll(addProjectiles);
     }
 
     private synchronized void updatePowerupPos() {
@@ -176,9 +182,9 @@ public class GameEngine {
         } else if (powerupChoice == 2) {
             powerup = new Powerup(new BombWeapon(40, "bombweapon"), randomXPos, upperYboundary, "bomb");
         } else if (powerupChoice == 3) {
-            powerup = new Powerup(new TripleShotWeapon(20, "tripleshotweapon"), randomXPos, upperYboundary, "tripleshot");
+            powerup = new Powerup(new TripleShotWeapon(12, "tripleshotweapon"), randomXPos, upperYboundary, "tripleshot");
         } else if (powerupChoice == 4) {
-            powerup = new Powerup(new ShrapnelWeapon(120, "shrapnelweapon"), randomXPos, upperYboundary, "shrapnel");
+            powerup = new Powerup(new ShrapnelWeapon(55, "shrapnelweapon"), randomXPos, upperYboundary, "shrapnel");
         } else {
             powerup = new Powerup(null, randomXPos, upperYboundary, "medkit");
         }
