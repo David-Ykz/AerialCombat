@@ -10,13 +10,64 @@ class Draw {
   storeImages(loadedImages) {
     this.cloudImg = loadedImages['cloud.png'];
     this.parachuteImg = loadedImages['parachute.png'];
+
+    this.airplaneImages = {
+      'airplaneWhite': loadedImages['airplane_white.png'],
+      'airplaneBlack': loadedImages['airplane_black.png']
+    };
+
+    this.powerupImages = {
+      'bomb': loadedImages['bomb_powerup.png'],
+      'medkit': loadedImages['med_box_powerup.png'],
+      'rocket': loadedImages['rocket_powerup.png'],
+      'shrapnel': loadedImages['shrapnel_powerup.png'],
+      'tripleshot': loadedImages['tripleshot_powerup.png']
+    };
+
+    this.projectileImages = {
+      'bullet': loadedImages['bullet_projectile.png'],
+      'bomb': loadedImages['bomb_projectile.png'],
+      'rocket': loadedImages['rocket_projectile.png'],
+      'shrapnel': loadedImages['shrapnel_projectile.png'],
+      'tripleshot': loadedImages['bullet_projectile.png'],
+    };
+
+    this.currentWeaponImages = {
+      'bombweapon': loadedImages['bomb_powerup.png'],
+      'rocketweapon': loadedImages['rocket_powerup.png'],
+      'shrapnelweapon': loadedImages['shrapnel_powerup.png'],
+      'tripleshotweapon': loadedImages['tripleshot_powerup.png'],
+    };
+  }
+
+  imageDict(src, width, height) {
+    var img = {url: src};
+    if (width != null) {
+      img['width'] = width;
+    }
+    if (height != null) {
+      img['height'] = height;
+    }
+    return img;
   }
 
   loadGameImages(onImagesLoadedFn) {
     var images = [
-      {url: 'cloud.png'},
-      {url: 'parachute.png', width: 32, height:32},
-      {url: 'airplane_black.png', width: 32, height: 32}
+      this.imageDict('cloud.png'),
+      this.imageDict('parachute.png', 32, 32),
+      this.imageDict('airplane_black.png', 32, 32),
+      this.imageDict('airplane_white.png', 32, 32),
+      this.imageDict('airplane_white.png', 32, 32),
+      this.imageDict('airplane_black.png', 32, 32),
+      this.imageDict('bomb_powerup.png', 32, 32),
+      this.imageDict('bomb_projectile.png', 32, 32),
+      this.imageDict('med_box_powerup.png', 32, 32),
+      this.imageDict('rocket_powerup.png', 32, 32),
+      this.imageDict('rocket_projectile.png', 32, 32),
+      this.imageDict('shrapnel_powerup.png', 32, 32),
+      this.imageDict('shrapnel_projectile.png', 32, 32),
+      this.imageDict('tripleshot_powerup.png', 32, 32),
+      this.imageDict('bullet_projectile.png', 32, 32),
     ];
     var loadedImages = {};
     var promiseArray = images.map(function(imgData) {
@@ -40,58 +91,6 @@ class Draw {
       this.storeImages(loadedImages);
       onImagesLoadedFn();
     });
-
-    // TODO: Move all of these into promise-based loading.
-    const airplaneWhiteImg = this.loadImage('airplane_white.png', 32, 32);
-    const airplaneBlackImg = this.loadImage('airplane_black.png', 32, 32);
-    const bombPowerupImg = this.loadImage('bomb_powerup.png', 32, 32);
-    const bombProjectileImg = this.loadImage('bomb_projectile.png', 32, 32);
-    const medBoxImg = this.loadImage('med_box_powerup.png', 32, 32);
-    const rocketPowerupImg = this.loadImage('rocket_powerup.png', 32, 32);
-    const rocketProjectileImg = this.loadImage('rocket_projectile.png', 32, 32);
-    const shrapnelPowerupImg = this.loadImage('shrapnel_powerup.png', 32, 32);
-    const shrapnelProjectile = this.loadImage('shrapnel_projectile.png', 32, 32);
-    const tripleshotImg = this.loadImage('tripleshot_powerup.png', 32, 32);
-    const bulletImg = this.loadImage('bullet_projectile.png', 32, 32);
-
-    this.airplaneImages = {
-      'airplaneWhite': airplaneWhiteImg,
-      'airplaneBlack': airplaneBlackImg
-    };
-
-    this.powerupImages = {
-      'bomb': bombPowerupImg,
-      'medkit': medBoxImg,
-      'rocket': rocketPowerupImg,
-      'shrapnel': shrapnelPowerupImg,
-      'tripleshot': tripleshotImg
-    };
-
-    this.projectileImages = {
-      'bullet': bulletImg,
-      'bomb': bombProjectileImg,
-      'rocket': rocketProjectileImg,
-      'shrapnel': shrapnelProjectile,
-      'tripleshot': bulletImg
-    };
-
-    this.currentWeaponImages = {
-      'bombweapon': bombPowerupImg,
-      'rocketweapon': rocketPowerupImg,
-      'shrapnelweapon': shrapnelPowerupImg,
-      'tripleshotweapon': tripleshotImg
-    };
-  }
-
-  loadImage(imageSrc, width, height) {
-    var img;
-    if (width != null && height != null) {
-      img = new Image(width, height);
-    } else {
-      img = new Image();
-    }
-    img.src = imageSrc;
-    return img;
   }
 
   drawAirplane(ctx, airplaneColor, xCenter, yCenter, angle, width, height) {
