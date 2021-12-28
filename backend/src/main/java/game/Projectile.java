@@ -72,8 +72,6 @@ public abstract class Projectile {
         message.put("name", name);
         message.put("xPos", xPos);
         message.put("yPos", yPos);
-        message.put("xVelocity", xVelocity);
-        message.put("yVelocity", yVelocity);
         message.put("radius", radius);
         message.put("angle", angle);
         return message;

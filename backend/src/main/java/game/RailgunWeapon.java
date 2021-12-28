@@ -8,7 +8,7 @@ public class RailgunWeapon extends Weapon {
 
 
     public Projectile shootProjectile(double xPos, double yPos, double angle, int playerID) {
-        Railgun railgun = new Railgun(xPos, yPos, angle, playerID);
+        Railgun railgun = new Railgun(xPos, yPos, angle, playerID, xPos, yPos);
         return railgun;
     }
 
