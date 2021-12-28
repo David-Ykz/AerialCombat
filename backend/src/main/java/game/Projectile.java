@@ -12,7 +12,7 @@ public abstract class Projectile {
     private int speed;
     private int damage;
     private final int playerID;
-    private int radius;
+    private double radius;
     private String name;
 
 
@@ -50,10 +50,10 @@ public abstract class Projectile {
     public void setRange(double range) { this.range = range; }
     public void setSpeed(int speed) { this.speed = speed; }
     public void setDamage(int damage) { this.damage = damage; }
-    public int getRadius() {
+    public double getRadius() {
         return this.radius;
     }
-    public void setRadius(int radius) {
+    public void setRadius(double radius) {
         this.radius = radius;
     }
 
