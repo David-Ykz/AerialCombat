@@ -83,7 +83,6 @@ class Draw {
     if (projectile.name == 'railgun') {
       ctx.beginPath();
       ctx.moveTo(x, y);
-      console.log(x, y, projectile.startX, projectile.xPos, projectile.startY, projectile.yPos);
       ctx.lineTo(x + projectile.startX - projectile.xPos, y + projectile.startY - projectile.yPos);
       ctx.strokeStyle = '#1a53ff';
       ctx.lineWidth = projectile.radius;
