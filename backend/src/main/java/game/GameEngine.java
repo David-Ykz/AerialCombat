@@ -174,6 +174,8 @@ public class GameEngine {
             powerup = new Powerup(new BombWeapon(40, "bombweapon"), randomXPos, upperYboundary, "bomb");
         } else if (powerupChoice == 3) {
             powerup = new Powerup(new TripleShotWeapon(20, "tripleshotweapon"), randomXPos, upperYboundary, "tripleshot");
+        } else if (powerupChoice == 4) {
+            powerup = new Powerup(new ShrapnelWeapon(120, "shrapnelweapon"), randomXPos, upperYboundary, "shrapnel");
         } else {
             powerup = new Powerup(null, randomXPos, upperYboundary, "medkit");
         }
