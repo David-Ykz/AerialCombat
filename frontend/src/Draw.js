@@ -19,6 +19,7 @@ class Draw {
     this.powerupImages = {
       'bomb': loadedImages['bomb_powerup.png'],
       'medkit': loadedImages['med_box_powerup.png'],
+      'railgun': loadedImages['railgun_powerup.png'],
       'rocket': loadedImages['rocket_powerup.png'],
       'shrapnel': loadedImages['shrapnel_powerup.png'],
       'tripleshot': loadedImages['tripleshot_powerup.png']
@@ -34,6 +35,7 @@ class Draw {
 
     this.currentWeaponImages = {
       'bombweapon': loadedImages['bomb_powerup.png'],
+      'railgunweapon': loadedImages['railgun_powerup.png'],
       'rocketweapon': loadedImages['rocket_powerup.png'],
       'shrapnelweapon': loadedImages['shrapnel_powerup.png'],
       'tripleshotweapon': loadedImages['tripleshot_powerup.png'],
@@ -62,6 +64,7 @@ class Draw {
       this.imageDict('bomb_powerup.png', 32, 32),
       this.imageDict('bomb_projectile.png', 32, 32),
       this.imageDict('med_box_powerup.png', 32, 32),
+      this.imageDict('railgun_powerup.png', 32, 32),
       this.imageDict('rocket_powerup.png', 32, 32),
       this.imageDict('rocket_projectile.png', 32, 32),
       this.imageDict('shrapnel_powerup.png', 32, 32),
@@ -112,16 +115,29 @@ class Draw {
   }
 
   drawProjectile(ctx, projectile, x, y) {
-    if (!(projectile.name in this.projectileImages)) {
-      return;
+    if (projectile.name == 'railgun') {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      console.log(x, y, projectile.startX, projectile.xPos, projectile.startY, projectile.yPos);
+      ctx.lineTo(x + projectile.startX - projectile.xPos, y + projectile.startY - projectile.yPos);
+      ctx.strokeStyle = '#1a53ff';
+      ctx.lineWidth = projectile.radius;
+      ctx.stroke();
+      ctx.closePath();
+    } else if (projectile.name in this.projectileImages) {
+      ctx.setTransform(1, 0, 0, 1, x, y);
+      ctx.rotate(-projectile.angle * Math.PI / 180);
+      ctx.drawImage(this.projectileImages[projectile.name], -projectile.radius, -projectile.radius, projectile.radius * 2 * RENDER_SCALE, projectile.radius * 2 * RENDER_SCALE);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    } else {
+      console.log('Error - invalid projectile name', projectile.name);
     }
-    ctx.setTransform(1, 0, 0, 1, x, y);
-    ctx.rotate(-projectile.angle * Math.PI / 180);
-    ctx.drawImage(this.projectileImages[projectile.name], -projectile.radius, -projectile.radius, projectile.radius * 2 * RENDER_SCALE, projectile.radius * 2 * RENDER_SCALE);
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
   drawCurrentUserWeapon(ctx, myPlayer) {
+    if (myPlayer == null || myPlayer.weapon == null || !(myPlayer.weapon in this.currentWeaponImages)) {
+      return;
+    }
     var currentWeaponImg = this.currentWeaponImages[myPlayer.weapon];
     if (currentWeaponImg != null) {
       this.drawImage(ctx, currentWeaponImg, 50, 50, 64, 64);

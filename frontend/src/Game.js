@@ -25,7 +25,7 @@ class Game extends React.Component {
     this.onImagesLoadedFn = this.onImagesLoadedFn.bind(this);
 
     this.backgroundCloudLocations = this.generateBackgroundCloudLocations(NUM_BACKGROUND_CLOUDS);
-    this.gameState = {players: [], projectiles: []};
+    this.gameState = {players: [], projectiles: [], powerups: []};
     this.clientSocket = new Socket(constants.GAME_SOCKET_ADDRESS, {path: '/engine.io/game', reconnection: true, reconnectionDelay: 10, reconnectionAttempts: 10});
     this.mouseDownTimeout = null;
     this.isGameOver = false;
@@ -41,6 +41,7 @@ class Game extends React.Component {
   }
 
   onImagesLoadedFn() {
+    console.log('images loaded - starting animations');
     this.fps = 100;
     this.canvas = this.refs.canvas;
     const ctx = this.refs.canvas.getContext('2d');
@@ -209,7 +210,9 @@ class Game extends React.Component {
         <a target="_blank" href="https://icons8.com/icon/eVRlPdxRxmNe/medical-box">Medical Box</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a><br/>
         <a target="_blank" href="https://icons8.com/icon/117057/missile">Missile</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a><br/>
         <a target="_blank" href="https://icons8.com/icon/12430/parachute">Parachute</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a><br/>
-
+        <br/>
+        <br/>
+        <br/>
       </div>
     );
   }
