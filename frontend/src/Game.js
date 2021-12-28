@@ -22,7 +22,6 @@ class Game extends React.Component {
     this.onMouseDown= this.onMouseDown.bind(this);
     this.onMouseUp = this.onMouseUp.bind(this);
     this.initConnectionToGame = this.initConnectionToGame.bind(this);
-    this.onImagesLoadedFn = this.onImagesLoadedFn.bind(this);
 
     this.backgroundCloudLocations = this.generateBackgroundCloudLocations(NUM_BACKGROUND_CLOUDS);
     this.gameState = {players: [], projectiles: [], powerups: []};
@@ -37,11 +36,7 @@ class Game extends React.Component {
 
   componentDidMount() {
     this.initConnectionToGame(this.clientSocket, this.playerId, this.playerName);
-    this.drawer = new Draw(this.onImagesLoadedFn);
-  }
-
-  onImagesLoadedFn() {
-    console.log('images loaded - starting animations');
+    this.drawer = new Draw();
     this.fps = 100;
     this.canvas = this.refs.canvas;
     const ctx = this.refs.canvas.getContext('2d');

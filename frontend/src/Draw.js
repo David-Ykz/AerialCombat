@@ -2,98 +2,63 @@
 const RENDER_SCALE = 1.2;
 
 class Draw {
-  constructor(onImagesLoadedFn) {
-    this.loadGameImages(onImagesLoadedFn);
-    this.storeImages = this.storeImages.bind(this);
+  constructor() {
+    this.loadImages();
   }
 
-  storeImages(loadedImages) {
-    this.cloudImg = loadedImages['cloud.png'];
-    this.parachuteImg = loadedImages['parachute.png'];
+  loadImages() {
+    this.cloudImg = this.loadImage('cloud.png');
+    this.parachuteImg = this.loadImage('parachute.png', 32, 32);
+    const airplaneWhiteImg = this.loadImage('airplane_white.png', 32, 32);
+    const airplaneBlackImg = this.loadImage('airplane_black.png', 32, 32);
+    const bombPowerupImg = this.loadImage('bomb_powerup.png', 32, 32);
+    const bombProjectileImg = this.loadImage('bomb_projectile.png', 32, 32);
+    const medBoxImg = this.loadImage('med_box_powerup.png', 32, 32);
+    const rocketPowerupImg = this.loadImage('rocket_powerup.png', 32, 32);
+    const rocketProjectileImg = this.loadImage('rocket_projectile.png', 32, 32);
+    const shrapnelPowerupImg = this.loadImage('shrapnel_powerup.png', 32, 32);
+    const shrapnelProjectile = this.loadImage('shrapnel_projectile.png', 32, 32);
+    const tripleshotImg = this.loadImage('tripleshot_powerup.png', 32, 32);
+    const bulletImg = this.loadImage('bullet_projectile.png', 32, 32);
 
     this.airplaneImages = {
-      'airplaneWhite': loadedImages['airplane_white.png'],
-      'airplaneBlack': loadedImages['airplane_black.png']
+     'airplaneWhite': airplaneWhiteImg,
+     'airplaneBlack': airplaneBlackImg
     };
 
     this.powerupImages = {
-      'bomb': loadedImages['bomb_powerup.png'],
-      'medkit': loadedImages['med_box_powerup.png'],
-      'railgun': loadedImages['railgun_powerup.png'],
-      'rocket': loadedImages['rocket_powerup.png'],
-      'shrapnel': loadedImages['shrapnel_powerup.png'],
-      'tripleshot': loadedImages['tripleshot_powerup.png']
+     'bomb': bombPowerupImg,
+     'medkit': medBoxImg,
+     'rocket': rocketPowerupImg,
+     'shrapnel': shrapnelPowerupImg,
+     'tripleshot': tripleshotImg
     };
 
     this.projectileImages = {
-      'bullet': loadedImages['bullet_projectile.png'],
-      'bomb': loadedImages['bomb_projectile.png'],
-      'rocket': loadedImages['rocket_projectile.png'],
-      'shrapnel': loadedImages['shrapnel_projectile.png'],
-      'tripleshot': loadedImages['bullet_projectile.png'],
+     'bullet': bulletImg,
+     'bomb': bombProjectileImg,
+     'rocket': rocketProjectileImg,
+     'shrapnel': shrapnelProjectile,
+     'tripleshot': bulletImg
     };
 
     this.currentWeaponImages = {
-      'bombweapon': loadedImages['bomb_powerup.png'],
-      'railgunweapon': loadedImages['railgun_powerup.png'],
-      'rocketweapon': loadedImages['rocket_powerup.png'],
-      'shrapnelweapon': loadedImages['shrapnel_powerup.png'],
-      'tripleshotweapon': loadedImages['tripleshot_powerup.png'],
+     'bombweapon': bombPowerupImg,
+     'rocketweapon': rocketPowerupImg,
+     'shrapnelweapon': shrapnelPowerupImg,
+     'tripleshotweapon': tripleshotImg
     };
   }
 
-  imageDict(src, width, height) {
-    var img = {url: src};
-    if (width != null) {
-      img['width'] = width;
+  loadImage(imageSrc, width, height) {
+    var img;
+    if (width != null && height != null) {
+      img = new Image(width, height);
+    } else {
+      img = new Image();
     }
-    if (height != null) {
-      img['height'] = height;
-    }
+    img.src = imageSrc;
     return img;
-  }
-
-  loadGameImages(onImagesLoadedFn) {
-    var images = [
-      this.imageDict('cloud.png'),
-      this.imageDict('parachute.png', 32, 32),
-      this.imageDict('airplane_black.png', 32, 32),
-      this.imageDict('airplane_white.png', 32, 32),
-      this.imageDict('airplane_white.png', 32, 32),
-      this.imageDict('airplane_black.png', 32, 32),
-      this.imageDict('bomb_powerup.png', 32, 32),
-      this.imageDict('bomb_projectile.png', 32, 32),
-      this.imageDict('med_box_powerup.png', 32, 32),
-      this.imageDict('railgun_powerup.png', 32, 32),
-      this.imageDict('rocket_powerup.png', 32, 32),
-      this.imageDict('rocket_projectile.png', 32, 32),
-      this.imageDict('shrapnel_powerup.png', 32, 32),
-      this.imageDict('shrapnel_projectile.png', 32, 32),
-      this.imageDict('tripleshot_powerup.png', 32, 32),
-      this.imageDict('bullet_projectile.png', 32, 32),
-    ];
-    var loadedImages = {};
-    var promiseArray = images.map(function(imgData) {
-       var prom = new Promise(function(resolve,reject){
-           var img;
-           if (imgData.width != null && imgData.height != null) {
-             img = new Image(imgData.width, imgData.height);
-           } else {
-             img = new Image();
-           }
-           img.src = imgData.url;
-           img.onload = function(){
-               loadedImages[imgData.url] = img;
-               resolve();
-           };
-       });
-       return prom;
-    });
-
-    Promise.all(promiseArray).then(() => {
-      this.storeImages(loadedImages);
-      onImagesLoadedFn();
-    });
   }
 
   drawAirplane(ctx, airplaneColor, xCenter, yCenter, angle, width, height) {
