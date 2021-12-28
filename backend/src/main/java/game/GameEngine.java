@@ -10,6 +10,7 @@ public class GameEngine {
     private final HashMap<Integer, Player> players = new HashMap<>();
     private final ArrayList<Projectile> projectiles = new ArrayList<>();
     private ArrayList<Powerup> powerups = new ArrayList<>();
+    private ArrayList<Collision> collisions = new ArrayList<>();
     private final int upperXboundary = 3000;
     private final int lowerXboundary = -3000;
     private final int upperYboundary = -1000;
@@ -33,6 +34,9 @@ public class GameEngine {
         if (alsoRemovePlayerProjectiles) {
             projectiles.removeIf(projectile -> projectile.getPlayerID() == playerId);
         }
+        Player player = players.get(playerId);
+        Collision newCollision = new Collision(player.getxPos(), player.getyPos());
+        collisions.add(newCollision);
         players.remove(playerId);
         if (players.isEmpty()) {
             endGame();
@@ -258,24 +262,27 @@ public class GameEngine {
             JSONArray playerInfo = new JSONArray();
             JSONArray projectileInfo = new JSONArray();
             JSONArray powerupInfo = new JSONArray();
-            for (Player player : players.values()) {
+            JSONArray collisionInfo = new JSONArray();
+            for (Player player : players.values()) { // Adds player info
                 playerInfo.put(player.toJSON());
             }
             gameInfo.put("players", playerInfo);
-            for (Projectile projectile : projectiles) {
+            for (Projectile projectile : projectiles) { // Adds projectile info
                 projectileInfo.put(projectile.toJSON());
             }
             gameInfo.put("projectiles", projectileInfo);
-            for (Powerup powerup : powerups) {
+            for (Powerup powerup : powerups) { // Adds powerup info
                 powerupInfo.put(powerup.toJSON());
             }
             gameInfo.put("powerups", powerupInfo);
-
+            for (Collision collision : collisions) {
+                collisionInfo.put(collision.toJSON());
+            }
+            gameInfo.put("collisions", collisionInfo);
             gameInfo.put("upperXboundary", upperXboundary);
             gameInfo.put("lowerXboundary", lowerXboundary);
             gameInfo.put("upperYboundary", upperYboundary);
             gameInfo.put("lowerYboundary", lowerYboundary);
-
             copiedPlayers = ImmutableList.copyOf(players.values());
         }
 
