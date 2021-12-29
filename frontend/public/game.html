@@ -22,7 +22,7 @@ Clouds - Image by rawpixel.com
   var SCREEN_MIDDLE_X = SCREEN_WIDTH / 2;
   var SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
   var SCREEN_SCALE = 1;
-  const RENDER_SCALE = 1.2;
+  const RENDER_SCALE = 1.3;
 
   const urlParams = new URLSearchParams(window.location.search);
   const playerId = Math.floor(Math.random() * 1000000);
@@ -43,20 +43,6 @@ Clouds - Image by rawpixel.com
 
   // resize the canvas to fill browser window dynamically
   window.addEventListener('resize', resizeCanvas, false);
-  function resizeCanvas() {
-    myCanvas.width = window.innerWidth;
-    myCanvas.height = window.innerHeight;
-    SCREEN_WIDTH = myCanvas.width;
-    SCREEN_HEIGHT = myCanvas.height;
-    SCREEN_MIDDLE_X = SCREEN_WIDTH / 2;
-    SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
-    // Always render relative to 768px height, to prevent users with larger
-    // monitors from having an advantage.
-    SCREEN_SCALE = SCREEN_HEIGHT / 768;
-
-    draw();
-  }
-
   resizeCanvas();
 
   // const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
@@ -77,6 +63,20 @@ Clouds - Image by rawpixel.com
     window.addEventListener("mousedown", onMouseDown, false);
     window.addEventListener("mouseup", onMouseUp, false);
   });
+
+  function resizeCanvas() {
+    myCanvas.width = window.innerWidth;
+    myCanvas.height = window.innerHeight;
+    SCREEN_WIDTH = myCanvas.width;
+    SCREEN_HEIGHT = myCanvas.height;
+    SCREEN_MIDDLE_X = SCREEN_WIDTH / 2;
+    SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
+    // Always render relative to 768px height, to prevent users with larger
+    // monitors from having an advantage.
+    SCREEN_SCALE = SCREEN_HEIGHT / 768;
+
+    draw();
+  }
 
   function getRelativeX(x, myX) {
     return (x - myX) * SCREEN_SCALE + SCREEN_MIDDLE_X;
@@ -180,12 +180,12 @@ Clouds - Image by rawpixel.com
       const airplane = player.id == playerId ? airplaneBlackImg : airplaneWhiteImg;
       const color = player.id == playerId ? 'green' : 'red';
       drawAirplane(ctx, airplane, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY), player.angle, player.radius * 2 * RENDER_SCALE * SCREEN_SCALE, player.radius * 2 * RENDER_SCALE * SCREEN_SCALE);
-      drawText(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) + 40 * SCREEN_SCALE, player.name, 'center', color, font='12px Arial');
-      drawHealthBar(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) - 10 * SCREEN_SCALE, player.health);
+      drawText(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) + 40 * RENDER_SCALE * SCREEN_SCALE, player.name, 'center', color, font='12px Arial');
+      drawHealthBar(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) - 10 * RENDER_SCALE * SCREEN_SCALE, player.health);
     }
 
     for (const projectile of gameState.projectiles) {
-      drawProjectile(ctx, projectile, getRelativeX(projectile.xPos, myX), getRelativeY(projectile.yPos, myY), SCREEN_SCALE);
+      drawProjectile(ctx, projectile, getRelativeX(projectile.xPos, myX), getRelativeY(projectile.yPos, myY), RENDER_SCALE * SCREEN_SCALE);
     }
 
     drawCurrentUserWeapon(ctx, myPlayer, SCREEN_SCALE);

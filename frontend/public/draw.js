@@ -61,13 +61,13 @@ function drawProjectile(ctx, projectile, x, y, scale) {
     ctx.moveTo(x, y);
     ctx.lineTo(x - projectile.xPos * scale + projectile.startX * scale, y - projectile.yPos * scale + projectile.startY * scale);
     ctx.strokeStyle = '#1a53ff';
-    ctx.lineWidth = projectile.radius * SCREEN_SCALE;
+    ctx.lineWidth = projectile.radius * scale;
     ctx.stroke();
     ctx.closePath();
   } else if (projectile.name in projectileImages) {
     ctx.setTransform(1, 0, 0, 1, x, y);
     ctx.rotate(-projectile.angle * Math.PI / 180);
-    ctx.drawImage(projectileImages[projectile.name], -projectile.radius * RENDER_SCALE * scale, -projectile.radius * RENDER_SCALE * scale, projectile.radius * 2 * RENDER_SCALE * scale, projectile.radius * 2 * RENDER_SCALE * scale);
+    ctx.drawImage(projectileImages[projectile.name], -projectile.radius * scale, -projectile.radius * scale, projectile.radius * 2 * scale, projectile.radius * 2 * scale);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   } else {
     console.log('Error - invalid projectile name', projectile.name);
