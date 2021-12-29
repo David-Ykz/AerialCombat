@@ -32,7 +32,7 @@ const projectileImages = {
 
 const currentWeaponImages = {
   'bombweapon': bombPowerupImg,
-  'railgun': railgunPowerupImg,
+  'railgunweapon': railgunPowerupImg,
   'rocketweapon': rocketPowerupImg,
   'shrapnelweapon': shrapnelPowerupImg,
   'tripleshotweapon': tripleshotImg
@@ -59,7 +59,8 @@ function drawProjectile(ctx, projectile, x, y, scale) {
   if (projectile.name == 'railgun') {
     ctx.beginPath();
     ctx.moveTo(x, y);
-    ctx.lineTo(x - projectile.xPos * scale + projectile.startX * scale, y - projectile.yPos * scale + projectile.startY * scale);
+    // TODO: Avoid referencing SCREEN_SCALE variable from another module.
+    ctx.lineTo(x - projectile.xPos * SCREEN_SCALE + projectile.startX * SCREEN_SCALE, y - projectile.yPos * SCREEN_SCALE + projectile.startY * SCREEN_SCALE);
     ctx.strokeStyle = '#1a53ff';
     ctx.lineWidth = projectile.radius * scale;
     ctx.stroke();
