@@ -40,22 +40,28 @@ Clouds - Image by rawpixel.com
   var angle = 0;
   var mouseDownTimeout;
   var isGameOver = false;
+  var killedBy = '';
 
   // resize the canvas to fill browser window dynamically
   window.addEventListener('resize', resizeCanvas, false);
   resizeCanvas();
 
-  // const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
-  const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
+  const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
+  // const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
   socket.on('open', () => {
     console.log('socket opened');
     socket.send(JSON.stringify({type: 'playerjoin', id: playerId, name: playerName}));
     socket.on('message', (data) => {
       const msg = JSON.parse(data);
+      console.log(msg);
       if (msg.type == 'gameInfo') {
         gameState = msg;
       } else if (msg.type == 'gameOver') {
         isGameOver = true;
+      } else if (msg.type == 'kill') {
+
+      } else if (msg.type == 'death') {
+        killedBy = msg.name;
       }
     });
     socket.on('close', () => { console.log('socket closed') });
@@ -192,6 +198,7 @@ Clouds - Image by rawpixel.com
 
     if (isGameOver) {
       drawText(ctx, SCREEN_WIDTH / 2, 40, 'Game over. Tough scene.', 'center', 'red');
+      drawText(ctx, SCREEN_WIDTH / 2, 80, 'Shot down by ' + killedBy + ".", 'center', 'red');
     }
   }
 
