@@ -83,7 +83,6 @@ Clouds - Image by rawpixel.com
         gameState = msg;
       } else if (msg.type == 'gameOver') {
         isGameOver = true;
-        console.log(document.getElementById('newGameButton'));
         document.getElementById('newGameButton').style.visibility = 'visible';
       } else if (msg.type == 'kill') {
         gameInfoMessages.push(createGameInfoMessage('You shot down ' + msg.name, 3000));
@@ -234,6 +233,7 @@ Clouds - Image by rawpixel.com
     }
 
     drawCurrentUserWeapon(ctx, myPlayer, SCREEN_SCALE);
+    drawScoreboard(ctx, gameState.players, myPlayer);
 
     // Draw messages.
     for (var i = 0; i < gameInfoMessages.length; i++) {

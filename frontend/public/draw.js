@@ -85,6 +85,31 @@ function drawCurrentUserWeapon(ctx, myPlayer, scale = 1) {
   }
 }
 
+function drawScoreboard(ctx, players, myPlayer) {
+  const leaderboardSize = 3;
+  const sortedPlayers = players.sort((a, b) => a.score > b.score && -1 || 1);
+  var currentPlayerRank = 1;
+  for (var i = 0; i < sortedPlayers.length; i++) {
+    if (sortedPlayers[i].id == myPlayer.id) {
+      currentPlayerRank = i + 1;
+      break;
+    }
+  }
+  drawText(ctx, SCREEN_WIDTH - 200, 30, 'Leaderboard', 'left', 'black', '28px Arial');
+  for (var i = 0; i < sortedPlayers.length && i < leaderboardSize; i++) {
+    drawText(ctx, SCREEN_WIDTH - 200, leaderboardSize * 30 + 70 - (leaderboardSize - i) * 30, (i + 1).toString() + '. ' + sortedPlayers[i].name, 'left', 'black', '20px Arial');
+    drawText(ctx, SCREEN_WIDTH - 10, leaderboardSize * 30 + 70 - (leaderboardSize - i) * 30, sortedPlayers[i].score, 'right', 'black', '20px Arial');
+    if (sortedPlayers[i].id == myPlayer.id) {
+      currentPlayerInLeaderboard = true;
+    }
+  }
+  if (currentPlayerRank > leaderboardSize) {
+    drawText(ctx, SCREEN_WIDTH - 200, 100, '     ...', 'left', 'black', '20px Arial');
+    drawText(ctx, SCREEN_WIDTH - 200, 130, currentPlayerRank.toString() + '. ' + myPlayer.name, 'left', 'black', '20px Arial');
+    drawText(ctx, SCREEN_WIDTH - 10, 130, myPlayer.score, 'right', 'black', '20px Arial');
+  }
+}
+
 function drawImage(ctx, image, xCenter, yCenter, width, height) {
   const imgWidth = width == null ? image.width : width;
   const imgHeight = height == null ? image.height : height;
