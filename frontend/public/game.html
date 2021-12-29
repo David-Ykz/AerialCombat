@@ -15,6 +15,7 @@ Clouds - Image by rawpixel.com
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/engine.io-client/3.4.3/engine.io.min.js"></script>
 <script src="./draw.js"></script>
+<script src="./game_info_message.js"></script>
 
 <script>
   var SCREEN_WIDTH = 1024;
@@ -39,8 +40,9 @@ Clouds - Image by rawpixel.com
   }
   var angle = 0;
   var mouseDownTimeout;
+  var gameInfoMessages = [];
   var isGameOver = false;
-  var killedBy = '';
+  var killedBy = null;
 
   // resize the canvas to fill browser window dynamically
   window.addEventListener('resize', resizeCanvas, false);
@@ -53,13 +55,12 @@ Clouds - Image by rawpixel.com
     socket.send(JSON.stringify({type: 'playerjoin', id: playerId, name: playerName}));
     socket.on('message', (data) => {
       const msg = JSON.parse(data);
-      console.log(msg);
       if (msg.type == 'gameInfo') {
         gameState = msg;
       } else if (msg.type == 'gameOver') {
         isGameOver = true;
       } else if (msg.type == 'kill') {
-
+        gameInfoMessages.push(createGameInfoMessage('You shot down ' + msg.name, 3000));
       } else if (msg.type == 'death') {
         killedBy = msg.name;
       }
@@ -196,9 +197,24 @@ Clouds - Image by rawpixel.com
 
     drawCurrentUserWeapon(ctx, myPlayer, SCREEN_SCALE);
 
+    // Draw messages.
+    for (var i = 0; i < gameInfoMessages.length; i++) {
+      drawText(ctx, 10, SCREEN_HEIGHT - 10 - 40 * i, gameInfoMessages[i].message, 'left', 'black', '18px Arial');
+    }
+
+    var newGameInfoMessages = [];
+    for (const gameInfoMessage of gameInfoMessages) {
+      if (!isGameInfoMessageExpired(gameInfoMessage)) {
+        newGameInfoMessages.push(gameInfoMessage);
+      }
+    }
+    gameInfoMessages = newGameInfoMessages;
+
     if (isGameOver) {
       drawText(ctx, SCREEN_WIDTH / 2, 40, 'Game over. Tough scene.', 'center', 'red');
-      drawText(ctx, SCREEN_WIDTH / 2, 80, 'Shot down by ' + killedBy + ".", 'center', 'red');
+      if (killedBy) {
+        drawText(ctx, SCREEN_WIDTH / 2, 80, 'Shot down by ' + killedBy + ".", 'center', 'red');
+      }
     }
   }
 
