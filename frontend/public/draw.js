@@ -4,6 +4,7 @@ const airplaneBlackImg = loadImage('airplane_black.png', 32, 32);
 const bombPowerupImg = loadImage('bomb_powerup.png', 32, 32);
 const bombProjectileImg = loadImage('bomb_projectile.png', 32, 32);
 const medBoxImg = loadImage('med_box_powerup.png', 32, 32);
+const railgunPowerupImg = loadImage('railgun_powerup.png', 32, 32);
 const rocketPowerupImg = loadImage('rocket_powerup.png', 32, 32);
 const rocketProjectileImg = loadImage('rocket_projectile.png', 32, 32);
 const parachuteImg = loadImage('parachute.png', 32, 32);
@@ -15,6 +16,7 @@ const bulletImg = loadImage('bullet_projectile.png', 32, 32);
 const powerupImages = {
   'bomb': bombPowerupImg,
   'medkit': medBoxImg,
+  'railgun': railgunPowerupImg,
   'rocket': rocketPowerupImg,
   'shrapnel': shrapnelPowerupImg,
   'tripleshot': tripleshotImg
@@ -30,6 +32,7 @@ const projectileImages = {
 
 const currentWeaponImages = {
   'bombweapon': bombPowerupImg,
+  'railgun': railgunPowerupImg,
   'rocketweapon': rocketPowerupImg,
   'shrapnelweapon': shrapnelPowerupImg,
   'tripleshotweapon': tripleshotImg
