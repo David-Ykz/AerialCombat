@@ -39,6 +39,7 @@ public class Railgun extends Projectile {
             if (playerX >= startX && playerX <= getxPos() || playerX <= startX && playerX >= getxPos()) {
                 return true;
             }
+        }
         return false;
     }
 

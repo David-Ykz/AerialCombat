@@ -209,7 +209,10 @@ public class GameEngine {
                 if (projectile.getPlayerID() != player.getId() && projectile.checkCollision(player)) {
                     removeProjectiles.add(projectile);
                     if (player.takeDamage(projectile.getDamage())) {
-                        players.get(projectile.getPlayerID()).increaseScore(5);
+                        Player killer = players.get(projectile.getPlayerID());
+                        killer.increaseScore(5);
+                        killer.sendKillInfo(player.getName());
+                        player.sendDeathInfo(killer.getName());
                         removePlayers.add(player);
                     }
                 }
@@ -229,6 +232,9 @@ public class GameEngine {
             for (Player otherPlayer : players.values()) {
                 if (otherPlayer.getId() != player.getId() && player.checkCollision(otherPlayer)) {
                     if (player.takeDamage(5)) {
+                        otherPlayer.increaseScore(5);
+                        otherPlayer.sendKillInfo(player.getName());
+                        player.sendDeathInfo(otherPlayer.getName());
                         removePlayers.add(player);
                     }
                 }
