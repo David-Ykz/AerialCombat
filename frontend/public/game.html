@@ -12,6 +12,19 @@
   <title>Aerial Combat</title>
   <link rel="icon" href="airplane_white.png">
 </head>
+<style>
+.newGameButton {
+  font-size : 30px;
+  position: fixed;
+  top: 70%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
+</style>
+<button id='newGameButton' onclick="window.location.reload();" class="newGameButton" style="visibility:hidden">
+  New Game
+</button>
 <canvas id="myCanvas" width="1024" height="768"></canvas>
 <br/>
 Clouds - Image by rawpixel.com
@@ -70,6 +83,8 @@ Clouds - Image by rawpixel.com
         gameState = msg;
       } else if (msg.type == 'gameOver') {
         isGameOver = true;
+        console.log(document.getElementById('newGameButton'));
+        document.getElementById('newGameButton').style.visibility = 'visible';
       } else if (msg.type == 'kill') {
         gameInfoMessages.push(createGameInfoMessage('You shot down ' + msg.name, 3000));
       } else if (msg.type == 'death') {
@@ -83,7 +98,7 @@ Clouds - Image by rawpixel.com
   });
 
   function resizeCanvas() {
-    myCanvas.width = window.innerWidth - 50;
+    myCanvas.width = window.innerWidth - 25;
     myCanvas.height = window.innerHeight - 50;
     SCREEN_WIDTH = myCanvas.width;
     SCREEN_HEIGHT = myCanvas.height;
@@ -198,7 +213,7 @@ Clouds - Image by rawpixel.com
       const airplane = player.id == playerId ? airplaneBlackImg : airplaneWhiteImg;
       const color = player.id == playerId ? 'green' : 'red';
       drawAirplane(ctx, airplane, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY), player.angle, player.radius * 2 * RENDER_SCALE * SCREEN_SCALE, player.radius * 2 * RENDER_SCALE * SCREEN_SCALE);
-      drawText(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) + 40 * RENDER_SCALE * SCREEN_SCALE, player.name, 'center', color, font='12px Arial');
+      drawText(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) + 30 * RENDER_SCALE * SCREEN_SCALE, player.name, 'center', color, font='12px Arial');
       drawHealthBar(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) - 10 * RENDER_SCALE * SCREEN_SCALE, player.health);
     }
 
