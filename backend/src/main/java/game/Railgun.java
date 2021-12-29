@@ -7,8 +7,8 @@ public class Railgun extends Projectile {
     private double startY;
     public Railgun(double xPos, double yPos, double angle, int playerID, double startX, double startY) {
         super(xPos, yPos, angle, playerID);
-        setRange(10000);
-        setSpeed(100);
+        setRange(4000);
+        setSpeed(200);
         setDamage(100);
         setRadius(4);
         setName("railgun");
@@ -36,10 +36,11 @@ public class Railgun extends Projectile {
         }
 
         if (b * b - 4 * a * c >= 0) {
-            return true;
-        } else {
-            return false;
+            if (playerX >= startX && playerX <= getxPos() || playerX <= startX && playerX >= getxPos()) {
+                return true;
+            }
         }
+        return false;
     }
 
     public JSONObject toJSON() {

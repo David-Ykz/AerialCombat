@@ -134,6 +134,20 @@ public class Player {
         return message;
     }
 
+
+    public void sendDeathInfo(String name) {
+        JSONObject message = new JSONObject();
+        message.put("type", "death");
+        message.put("name", name);
+        sendInfo(message.toString());
+    }
+    public void sendKillInfo(String name) {
+        JSONObject message = new JSONObject();
+        message.put("type", "kill");
+        message.put("name", name);
+        sendInfo(message.toString());
+    }
+
     public boolean checkCollision(Player player) {
         double playerX = player.getxPos();
         double playerY = player.getyPos();
