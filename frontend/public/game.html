@@ -17,17 +17,21 @@ Clouds - Image by rawpixel.com
 <script src="./draw.js"></script>
 
 <script>
-  const SCREEN_WIDTH = 1024;
-  const SCREEN_HEIGHT = 768;
-  const SCREEN_MIDDLE_X = SCREEN_WIDTH / 2;
-  const SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
+  var SCREEN_WIDTH = 1024;
+  var SCREEN_HEIGHT = 768;
+  var SCREEN_MIDDLE_X = SCREEN_WIDTH / 2;
+  var SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
+  var SCREEN_SCALE = 1;
   const RENDER_SCALE = 1.2;
 
   const urlParams = new URLSearchParams(window.location.search);
   const playerId = Math.floor(Math.random() * 1000000);
   const playerName = urlParams.get('playerName') == null ? 'john doe' : urlParams.get('playerName');
 
-  var gameState = {};
+  const canvas = document.getElementById('myCanvas');
+  const context = canvas.getContext('2d');
+
+  var gameState = {players: [], powerups: [], projectiles: []};
   // TODO: Better way of generating random obstacles within boundaries.
   var obstacles = [];
   for (var i =0 ; i < 15; i++) {
@@ -37,8 +41,26 @@ Clouds - Image by rawpixel.com
   var mouseDownTimeout;
   var isGameOver = false;
 
-  const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
-  // const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
+  // resize the canvas to fill browser window dynamically
+  window.addEventListener('resize', resizeCanvas, false);
+  function resizeCanvas() {
+    myCanvas.width = window.innerWidth;
+    myCanvas.height = window.innerHeight;
+    SCREEN_WIDTH = myCanvas.width;
+    SCREEN_HEIGHT = myCanvas.height;
+    SCREEN_MIDDLE_X = SCREEN_WIDTH / 2;
+    SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
+    // Always render relative to 768px height, to prevent users with larger
+    // monitors from having an advantage.
+    SCREEN_SCALE = SCREEN_HEIGHT / 768;
+
+    draw();
+  }
+
+  resizeCanvas();
+
+  // const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
+  const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
   socket.on('open', () => {
     console.log('socket opened');
     socket.send(JSON.stringify({type: 'playerjoin', id: playerId, name: playerName}));
@@ -55,6 +77,14 @@ Clouds - Image by rawpixel.com
     window.addEventListener("mousedown", onMouseDown, false);
     window.addEventListener("mouseup", onMouseUp, false);
   });
+
+  function getRelativeX(x, myX) {
+    return (x - myX) * SCREEN_SCALE + SCREEN_MIDDLE_X;
+  }
+
+  function getRelativeY(y, myY) {
+    return (y - myY) * SCREEN_SCALE + SCREEN_MIDDLE_Y;
+  }
 
   function getMouseEventAngle(inputMouseX, inputMouseY) {
     var rect = myCanvas.getBoundingClientRect();
@@ -106,8 +136,12 @@ Clouds - Image by rawpixel.com
     socket.send(JSON.stringify({type: 'updateplayer', id: playerId, angle: angle}));
   }
 
+  function startDrawingAnimation() {
+    window.requestAnimationFrame(startDrawingAnimation);
+    draw();
+  }
+
   function draw() {
-    window.requestAnimationFrame(draw);
     var canvas = document.getElementById('myCanvas');
     canvas.style.background = "#87CEFA";
     var ctx = canvas.getContext('2d');
@@ -129,38 +163,38 @@ Clouds - Image by rawpixel.com
     }
 
     // Draw boundaries.
-    drawRect(ctx, gameState.upperXboundary - myX + SCREEN_MIDDLE_X, -10000, 10000, 20000, '#00BFFF');
-    drawRect(ctx, gameState.lowerXboundary - myX + SCREEN_MIDDLE_X - 20000, -10000, 20000, 20000, '#00BFFF');
-    drawRect(ctx, -10000, gameState.upperYboundary - myY + SCREEN_MIDDLE_Y - 10000, 20000, 10000, '#00BFFF');
-    drawRect(ctx, -10000, gameState.lowerYboundary - myY + SCREEN_MIDDLE_Y, 20000, 10000, '#00BFFF');
+    drawRect(ctx, getRelativeX(gameState.upperXboundary, myX), -10000, 10000, 20000, '#00BFFF');
+    drawRect(ctx, getRelativeX(gameState.lowerXboundary, myX) - 20000, -10000, 20000, 20000, '#00BFFF');
+    drawRect(ctx, -10000, getRelativeY(gameState.upperYboundary, myY) - 10000, 20000, 10000, '#00BFFF');
+    drawRect(ctx, -10000, getRelativeY(gameState.lowerYboundary, myY), 20000, 10000, '#00BFFF');
 
     for (const obstacle of obstacles) {
-      drawCloud(ctx, obstacle.xPos - myX + SCREEN_MIDDLE_X, obstacle.yPos - myY + SCREEN_MIDDLE_Y);
+      drawCloud(ctx, getRelativeX(obstacle.xPos, myX), getRelativeY(obstacle.yPos, myY), SCREEN_SCALE);
     }
 
     for (const powerup of gameState.powerups) {
-      drawPowerUp(ctx, powerup, powerup.xPos - myX + SCREEN_MIDDLE_X, powerup.yPos - myY + SCREEN_MIDDLE_Y, powerup.radius * 2, powerup.radius * 2);
+      drawPowerUp(ctx, powerup, getRelativeX(powerup.xPos, myX), getRelativeY(powerup.yPos, myY), powerup.radius * 2 * SCREEN_SCALE, powerup.radius * 2 * SCREEN_SCALE);
     }
 
     for (const player of gameState.players) {
       const airplane = player.id == playerId ? airplaneBlackImg : airplaneWhiteImg;
       const color = player.id == playerId ? 'green' : 'red';
-      drawAirplane(ctx, airplane, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y, player.angle, player.radius * 2 * RENDER_SCALE, player.radius * 2* RENDER_SCALE);
-      drawText(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y + 40, player.name, 'center', color, font='12px Arial');
-      drawHealthBar(ctx, player.xPos - myX + SCREEN_MIDDLE_X, player.yPos - myY + SCREEN_MIDDLE_Y - 10, player.health);
+      drawAirplane(ctx, airplane, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY), player.angle, player.radius * 2 * RENDER_SCALE * SCREEN_SCALE, player.radius * 2 * RENDER_SCALE * SCREEN_SCALE);
+      drawText(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) + 40 * SCREEN_SCALE, player.name, 'center', color, font='12px Arial');
+      drawHealthBar(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) - 10 * SCREEN_SCALE, player.health);
     }
 
     for (const projectile of gameState.projectiles) {
-      drawProjectile(ctx, projectile, projectile.xPos - myX + SCREEN_MIDDLE_X, projectile.yPos - myY + SCREEN_MIDDLE_Y);
+      drawProjectile(ctx, projectile, getRelativeX(projectile.xPos, myX), getRelativeY(projectile.yPos, myY), SCREEN_SCALE);
     }
 
-    drawCurrentUserWeapon(ctx, myPlayer);
+    drawCurrentUserWeapon(ctx, myPlayer, SCREEN_SCALE);
 
     if (isGameOver) {
       drawText(ctx, SCREEN_WIDTH / 2, 40, 'Game over. Tough scene.', 'center', 'red');
     }
   }
 
-  draw();
+  startDrawingAnimation();
 </script>
 </html>

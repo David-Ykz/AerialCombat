@@ -55,32 +55,32 @@ function drawPowerUp(ctx, powerup, xCenter, yCenter, width, height) {
   drawImage(ctx, powerupImages[powerup.name], xCenter, yCenter, width, height);
 }
 
-function drawProjectile(ctx, projectile, x, y) {
+function drawProjectile(ctx, projectile, x, y, scale) {
   if (projectile.name == 'railgun') {
     ctx.beginPath();
     ctx.moveTo(x, y);
-    ctx.lineTo(x + projectile.startX - projectile.xPos, y + projectile.startY - projectile.yPos);
+    ctx.lineTo(x - projectile.xPos * scale + projectile.startX * scale, y - projectile.yPos * scale + projectile.startY * scale);
     ctx.strokeStyle = '#1a53ff';
-    ctx.lineWidth = projectile.radius;
+    ctx.lineWidth = projectile.radius * SCREEN_SCALE;
     ctx.stroke();
     ctx.closePath();
   } else if (projectile.name in projectileImages) {
     ctx.setTransform(1, 0, 0, 1, x, y);
     ctx.rotate(-projectile.angle * Math.PI / 180);
-    ctx.drawImage(projectileImages[projectile.name], -projectile.radius, -projectile.radius, projectile.radius * 2 * RENDER_SCALE, projectile.radius * 2 * RENDER_SCALE);
+    ctx.drawImage(projectileImages[projectile.name], -projectile.radius * RENDER_SCALE * scale, -projectile.radius * RENDER_SCALE * scale, projectile.radius * 2 * RENDER_SCALE * scale, projectile.radius * 2 * RENDER_SCALE * scale);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   } else {
     console.log('Error - invalid projectile name', projectile.name);
   }
 }
 
-function drawCurrentUserWeapon(ctx, myPlayer) {
+function drawCurrentUserWeapon(ctx, myPlayer, scale = 1) {
   if (myPlayer == null || myPlayer.weapon == null || !(myPlayer.weapon in currentWeaponImages)) {
     return;
   }
   var currentWeaponImg = currentWeaponImages[myPlayer.weapon];
   if (currentWeaponImg != null) {
-    drawImage(ctx, currentWeaponImg, 50, 50, 64, 64);
+    drawImage(ctx, currentWeaponImg, 50 * scale, 50 * scale, 64 * scale, 64 * scale);
   }
 }
 
@@ -128,7 +128,7 @@ function drawRect(ctx, x, y, width, height, color='#410765') {
 }
 
 function drawCloud(ctx, x, y) {
-  ctx.drawImage(cloud, x, y);
+  ctx.drawImage(cloud, x, y, cloud.width * SCREEN_SCALE, cloud.height * SCREEN_SCALE);
 }
 
 function loadImage(imageSrc, width, height) {
