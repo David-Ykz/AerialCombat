@@ -292,6 +292,7 @@ public class GameEngine {
             gameInfo.put("upperYboundary", upperYboundary);
             gameInfo.put("lowerYboundary", lowerYboundary);
             copiedPlayers = ImmutableList.copyOf(players.values());
+            collisions.clear();
         }
 
         for (Player player : copiedPlayers) {

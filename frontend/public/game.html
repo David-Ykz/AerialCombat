@@ -14,6 +14,7 @@ Clouds - Image by rawpixel.com
 <a target="_blank" href="https://icons8.com/icon/12430/parachute">Parachute</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/engine.io-client/3.4.3/engine.io.min.js"></script>
+<script src="./explosion.js"></script>
 <script src="./draw.js"></script>
 <script src="./game_info_message.js"></script>
 
@@ -32,7 +33,7 @@ Clouds - Image by rawpixel.com
   const canvas = document.getElementById('myCanvas');
   const context = canvas.getContext('2d');
 
-  var gameState = {players: [], powerups: [], projectiles: []};
+  var gameState = {players: [], powerups: [], projectiles: [], collisions: []};
   // TODO: Better way of generating random obstacles within boundaries.
   var obstacles = [];
   for (var i =0 ; i < 15; i++) {
@@ -40,6 +41,7 @@ Clouds - Image by rawpixel.com
   }
   var angle = 0;
   var mouseDownTimeout;
+  var explosionAnimations = [];
   var gameInfoMessages = [];
   var isGameOver = false;
   var killedBy = null;
@@ -190,6 +192,18 @@ Clouds - Image by rawpixel.com
       drawText(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) + 40 * RENDER_SCALE * SCREEN_SCALE, player.name, 'center', color, font='12px Arial');
       drawHealthBar(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) - 10 * RENDER_SCALE * SCREEN_SCALE, player.health);
     }
+
+    for(const collision of gameState.collisions) {
+      explosionAnimations.push(new ExplosionAnimation(collision.xPos, collision.yPos, 150));
+    }
+
+    explosionAnimations.forEach((explosionAnimation, i) => {
+      explosionAnimation.updateExplosion();
+      explosionAnimation.drawRelative(ctx, myX, myY, SCREEN_SCALE);
+      if (explosionAnimation.isAnimationOver()) {
+        explosionAnimations.splice(i, 1);
+      }
+    });
 
     for (const projectile of gameState.projectiles) {
       drawProjectile(ctx, projectile, getRelativeX(projectile.xPos, myX), getRelativeY(projectile.yPos, myY), RENDER_SCALE * SCREEN_SCALE);
