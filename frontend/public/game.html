@@ -73,14 +73,14 @@ Clouds - Image by rawpixel.com
 
   function resizeCanvas() {
     myCanvas.width = window.innerWidth;
-    myCanvas.height = window.innerHeight;
+    myCanvas.height = window.innerHeight - 20;
     SCREEN_WIDTH = myCanvas.width;
     SCREEN_HEIGHT = myCanvas.height;
     SCREEN_MIDDLE_X = SCREEN_WIDTH / 2;
     SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
-    // Always render relative to 768px height, to prevent users with larger
+    // Always render relative to max allowed size, to prevent users with larger
     // monitors from having an advantage.
-    SCREEN_SCALE = SCREEN_HEIGHT / 768;
+    SCREEN_SCALE = Math.max(SCREEN_WIDTH / 1024.0, SCREEN_HEIGHT / 768.0);
 
     draw();
   }
@@ -213,7 +213,7 @@ Clouds - Image by rawpixel.com
     if (isGameOver) {
       drawText(ctx, SCREEN_WIDTH / 2, 40, 'Game over. Tough scene.', 'center', 'red');
       if (killedBy) {
-        drawText(ctx, SCREEN_WIDTH / 2, 80, 'Shot down by ' + killedBy + ".", 'center', 'red');
+        drawText(ctx, SCREEN_WIDTH / 2, 70, 'Shot down by ' + killedBy + ".", 'center', 'red', '22px Arial');
       }
     }
   }
