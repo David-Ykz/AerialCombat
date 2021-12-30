@@ -67,7 +67,7 @@ Clouds - Image by rawpixel.com
   var gameInfoMessages = [];
   var isGameOver = false;
   var killedBy = null;
-  var isAiming = false;
+  var isAutoAiming = false;
 
   // resize the canvas to fill browser window dynamically
   window.addEventListener('resize', resizeCanvas, false);
@@ -82,6 +82,7 @@ Clouds - Image by rawpixel.com
       const msg = JSON.parse(data);
       if (msg.type == 'gameInfo') {
         gameState = msg;
+        runAutoAim();
       } else if (msg.type == 'gameOver') {
         isGameOver = true;
         document.getElementById('newGameButton').style.visibility = 'visible';
@@ -174,7 +175,6 @@ Clouds - Image by rawpixel.com
       // Only handle left click events.
       return;
     }
-    isAiming = !isAiming;
     const angle = getMouseEventAngle(event.clientX, event.clientY);
     socket.send(JSON.stringify({type: 'shootbullet', id: playerId, angle: angle}));
     mouseDownTimeout = setTimeout(genOnShootFn(), 10);
@@ -187,7 +187,7 @@ Clouds - Image by rawpixel.com
   }
 
   function onMouseMove(event) {
-    if (isAiming) {
+    if (isAutoAiming) {
       return;
     }
     const angle = getMouseEventAngle(event.clientX, event.clientY);
@@ -196,6 +196,22 @@ Clouds - Image by rawpixel.com
 
   function onKeyUp(event) {
     var keyCode = event.keyCode;
+    switch (keyCode) {
+      case 68: //d
+        isAutoAiming = !isAutoAiming;
+        break;
+    }
+  }
+
+  function startDrawingAnimation() {
+    window.requestAnimationFrame(startDrawingAnimation);
+    draw();
+  }
+
+  function runAutoAim() {
+    if (!isAutoAiming) {
+      return;
+    }
     var myPlayer;
     for (const player of gameState.players) {
       if (player.id == playerId) {
@@ -212,17 +228,8 @@ Clouds - Image by rawpixel.com
         closestPlayer = player;
       }
     }
-    switch (keyCode) {
-      case 68: //d
-        socket.send(JSON.stringify({type: 'updateplayer', id: myPlayer.id, angle: getHaxAngle(closestPlayer.xPos, closestPlayer.yPos, myPlayer.xPos, myPlayer.yPos)}));
-        socket.send(JSON.stringify({type: 'shootbullet', id: myPlayer.id, angle: getHaxAngle(closestPlayer.xPos, closestPlayer.yPos, myPlayer.xPos, myPlayer.yPos)}));
-        break;
-    }
-  }
-
-  function startDrawingAnimation() {
-    window.requestAnimationFrame(startDrawingAnimation);
-    draw();
+    socket.send(JSON.stringify({type: 'updateplayer', id: myPlayer.id, angle: getHaxAngle(closestPlayer.xPos, closestPlayer.yPos, myPlayer.xPos, myPlayer.yPos)}));
+    socket.send(JSON.stringify({type: 'shootbullet', id: myPlayer.id, angle: getHaxAngle(closestPlayer.xPos, closestPlayer.yPos, myPlayer.xPos, myPlayer.yPos)}));
   }
 
   function draw() {
