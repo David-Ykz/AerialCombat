@@ -23,6 +23,10 @@ public class GameEngine {
         if (players.isEmpty()) {
             startGame();
         }
+        double randomXPos = Math.random() * 2 * (upperXboundary - 500) + lowerXboundary + 500;
+        double randomYPos = Math.random() * 2 * (upperYboundary + 100) + lowerYboundary - 100;
+        player.setxPos(randomXPos);
+        player.setyPos(randomYPos);
         players.put(player.getId(), player);
     }
 
@@ -141,10 +145,6 @@ public class GameEngine {
 
     private synchronized void updatePlayerPos() {
         for (Player player : players.values()) {
-            if (player.getName().equals("banzai")) {
-                player.setHealth(100000);
-                player.setWeapon(new RailgunWeapon(1, "railgunweapon"));
-            }
             player.setxPos(player.getxPos() - player.getxVelocity());
             player.setyPos(player.getyPos() - player.getyVelocity());
             player.getWeapon().increaseCurrentReoad();
