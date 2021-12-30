@@ -155,8 +155,8 @@ public class GameEngine {
         for (Projectile projectile : projectiles) {
             if (projectile.updatePosition()) {
                 if (projectile.getName().equals("shrapnel")) {
-                    for (int i = 0; i < 12; i++) {
-                        double angle = (projectile.getAngle() + i * 30) % 360;
+                    for (int i = 0; i < 24; i++) {
+                        double angle = (projectile.getAngle() + i * 15) % 360;
                         Projectile newProjectile = new Bullet(projectile.getxPos(), projectile.getyPos(), angle, projectile.getPlayerID());
                         addProjectiles.add(newProjectile);
                     }
