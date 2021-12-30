@@ -58,8 +58,8 @@ Clouds - Image by rawpixel.com
   var gameState = {players: [], powerups: [], projectiles: [], collisions: []};
   // TODO: Better way of generating random obstacles within boundaries.
   var obstacles = [];
-  for (var i =0 ; i < 15; i++) {
-    obstacles.push({xPos: Math.floor(Math.random() * 3000) - 2000, yPos: Math.floor(Math.random() * 1000) - 500});
+  for (var i =0 ; i < 30; i++) {
+    obstacles.push({xPos: Math.floor(Math.random() * 5000) - 3000, yPos: Math.floor(Math.random() * 1500) - 1000});
   }
   var angle = 0;
   var mouseDownTimeout;
@@ -72,8 +72,8 @@ Clouds - Image by rawpixel.com
   window.addEventListener('resize', resizeCanvas, false);
   resizeCanvas();
 
-  const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
-  // const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
+  // const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
+  const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
   socket.on('open', () => {
     console.log('socket opened');
     socket.send(JSON.stringify({type: 'playerjoin', id: playerId, name: playerName}));
@@ -105,7 +105,7 @@ Clouds - Image by rawpixel.com
     SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
     // Always render relative to max allowed size, to prevent users with larger
     // monitors from having an advantage.
-    SCREEN_SCALE = Math.max(SCREEN_WIDTH / 1024.0, SCREEN_HEIGHT / 768.0);
+    SCREEN_SCALE = Math.max(SCREEN_WIDTH / 1680.0, SCREEN_HEIGHT / 1050.0);
 
     draw();
   }

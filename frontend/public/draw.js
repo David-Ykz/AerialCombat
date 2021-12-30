@@ -1,4 +1,4 @@
-const cloud = loadImage('cloud.png');
+const cloud = loadImage('cloud.png', 1200, 566);
 const airplaneWhiteImg = loadImage('airplane_white.png', 32, 32);
 const airplaneBlackImg = loadImage('airplane_black.png', 32, 32);
 const bombPowerupImg = loadImage('bomb_powerup.png', 32, 32);
