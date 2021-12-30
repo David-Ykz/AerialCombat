@@ -3,7 +3,7 @@ package game;
 public class Bullet extends Projectile {
     public Bullet(double xPos, double yPos, double angle, int playerID) {
         super(xPos, yPos, angle, playerID);
-        setRange(1200);
+        setRange(1600);
         setSpeed(18);
         setDamage(10);
         setRadius(8);
