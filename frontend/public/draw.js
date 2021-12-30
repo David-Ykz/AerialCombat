@@ -104,8 +104,8 @@ function drawScoreboard(ctx, players, myPlayer) {
     }
   }
   if (currentPlayerRank > leaderboardSize) {
-    drawText(ctx, SCREEN_WIDTH - 200, 100, '     ...', 'left', 'black', '20px Arial');
-    drawText(ctx, SCREEN_WIDTH - 200, 130, currentPlayerRank.toString() + '. ' + myPlayer.name, 'left', 'black', '20px Arial');
+    drawText(ctx, SCREEN_WIDTH - 200, leaderboardSize * 30 + 70, '     ...', 'left', 'black', '20px Arial');
+    drawText(ctx, SCREEN_WIDTH - 200, leaderboardSize * 30 + 70 + 30, currentPlayerRank.toString() + '. ' + myPlayer.name, 'left', 'black', '20px Arial');
     drawText(ctx, SCREEN_WIDTH - 10, 130, myPlayer.score, 'right', 'black', '20px Arial');
   }
 }
