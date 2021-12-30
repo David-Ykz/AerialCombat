@@ -212,9 +212,9 @@ public class GameEngine {
                         Player killer = players.get(projectile.getPlayerID());
                         if (killer != null) {
                             killer.increaseScore(5);
+                            killer.sendKillInfo(player.getName());
+                            player.sendDeathInfo(killer.getName());
                         }
-                        killer.sendKillInfo(player.getName());
-                        player.sendDeathInfo(killer.getName());
                         removePlayers.add(player);
                     }
                 }
