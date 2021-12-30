@@ -67,13 +67,14 @@ Clouds - Image by rawpixel.com
   var gameInfoMessages = [];
   var isGameOver = false;
   var killedBy = null;
+  var isAiming = false;
 
   // resize the canvas to fill browser window dynamically
   window.addEventListener('resize', resizeCanvas, false);
   resizeCanvas();
 
-   const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
-  //const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
+   // const socket = eio('ws://localhost:1700', {path: '/engine.io/game'});
+  const socket = eio('wss://y-backend.com:1700', {path: '/engine.io/game'});
   socket.on('open', () => {
     console.log('socket opened');
     socket.send(JSON.stringify({type: 'playerjoin', id: playerId, name: playerName}));
@@ -94,6 +95,7 @@ Clouds - Image by rawpixel.com
     window.addEventListener("mousemove", onMouseMove, false);
     window.addEventListener("mousedown", onMouseDown, false);
     window.addEventListener("mouseup", onMouseUp, false);
+    window.addEventListener("keyup", onKeyUp, false);
   });
 
   function resizeCanvas() {
@@ -105,7 +107,7 @@ Clouds - Image by rawpixel.com
     SCREEN_MIDDLE_Y = SCREEN_HEIGHT / 2;
     // Always render relative to max allowed size, to prevent users with larger
     // monitors from having an advantage.
-    SCREEN_SCALE = Math.max(SCREEN_WIDTH / 1680.0, SCREEN_HEIGHT / 1050.0);
+    SCREEN_SCALE = Math.max(SCREEN_WIDTH / 4000.0, SCREEN_HEIGHT / 4000.0);
 
     draw();
   }
@@ -140,6 +142,26 @@ Clouds - Image by rawpixel.com
     return angle;
   }
 
+  function getHaxAngle(oppX, oppY, myX, myY) {
+    mouseX = oppX - myX;
+    mouseY = oppY = myY;
+
+    if (mouseX == 0 && mouseY < 0) {
+      angle = 0;
+    } else if (mouseX == 0 && mouseY > 0) {
+      angle = 180;
+    } else if (!(mouseX == 0 && mouseY == 0)) {
+      angle = Math.atan(mouseY / mouseX) * 180 / Math.PI;
+      if (mouseX < 0) {
+        angle += 180;
+      }
+    }
+    if (angle < 0) {
+      angle = 360 + angle;
+    }
+    return angle;
+  }
+
   function genOnShootFn() {
     return function () {
       socket.send(JSON.stringify({type: 'shootbullet', id: playerId, angle: angle}));
@@ -152,6 +174,7 @@ Clouds - Image by rawpixel.com
       // Only handle left click events.
       return;
     }
+    isAiming = !isAiming;
     const angle = getMouseEventAngle(event.clientX, event.clientY);
     socket.send(JSON.stringify({type: 'shootbullet', id: playerId, angle: angle}));
     mouseDownTimeout = setTimeout(genOnShootFn(), 10);
@@ -164,8 +187,37 @@ Clouds - Image by rawpixel.com
   }
 
   function onMouseMove(event) {
+    if (isAiming) {
+      return;
+    }
     const angle = getMouseEventAngle(event.clientX, event.clientY);
     socket.send(JSON.stringify({type: 'updateplayer', id: playerId, angle: angle}));
+  }
+
+  function onKeyUp(event) {
+    var keyCode = event.keyCode;
+    var myPlayer;
+    for (const player of gameState.players) {
+      if (player.id == playerId) {
+        myPlayer = player;
+        break;
+      }
+    }
+    var closestPlayer;
+    var closestDist = 100000;
+    for (const player of gameState.players) {
+      var dist = Math.sqrt( Math.pow((player.xPos - myPlayer.xPos), 2) + Math.pow((player.yPos - myPlayer.yPos), 2) );
+      if (dist < closestDist && player.id != myPlayer.id) {
+        closestDist = dist;
+        closestPlayer = player;
+      }
+    }
+    switch (keyCode) {
+      case 68: //d
+        socket.send(JSON.stringify({type: 'updateplayer', id: myPlayer.id, angle: getHaxAngle(closestPlayer.xPos, closestPlayer.yPos, myPlayer.xPos, myPlayer.yPos)}));
+        socket.send(JSON.stringify({type: 'shootbullet', id: myPlayer.id, angle: getHaxAngle(closestPlayer.xPos, closestPlayer.yPos, myPlayer.xPos, myPlayer.yPos)}));
+        break;
+    }
   }
 
   function startDrawingAnimation() {
