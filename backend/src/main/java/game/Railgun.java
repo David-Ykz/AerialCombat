@@ -8,7 +8,7 @@ public class Railgun extends Projectile {
     public Railgun(double xPos, double yPos, double angle, int playerID, double startX, double startY) {
         super(xPos, yPos, angle, playerID);
         setRange(4000);
-        setSpeed(200);
+        setSpeed(400);
         setDamage(100);
         setRadius(4);
         setName("railgun");

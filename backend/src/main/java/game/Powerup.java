@@ -14,7 +14,7 @@ public class Powerup {
         this.xPos = xPos;
         this.yPos = yPos;
         this.name = name;
-        this.gravity = 1;
+        this.gravity = 2;
         this.radius = 15;
     }
 

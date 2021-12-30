@@ -133,7 +133,7 @@ public class GameEngine {
         checkProjectileCollisions();
         checkPlayerCollision();
         checkPowerupCollision();
-        if (Math.random() > 0.99) {
+        if (Math.random() > 0.98) {
             createPowerup();
         }
         sendGameInfo();
@@ -155,8 +155,8 @@ public class GameEngine {
         for (Projectile projectile : projectiles) {
             if (projectile.updatePosition()) {
                 if (projectile.getName().equals("shrapnel")) {
-                    for (int i = -15; i <= 15; i = i + 5) {
-                        double angle = (projectile.getAngle() + i) % 360;
+                    for (int i = 0; i < 12; i++) {
+                        double angle = (projectile.getAngle() + i * 30) % 360;
                         Projectile newProjectile = new Bullet(projectile.getxPos(), projectile.getyPos(), angle, projectile.getPlayerID());
                         addProjectiles.add(newProjectile);
                     }
@@ -189,9 +189,9 @@ public class GameEngine {
         } else if (powerupChoice == 2) {
             powerup = new Powerup(new BombWeapon(40, "bombweapon"), randomXPos, upperYboundary, "bomb");
         } else if (powerupChoice == 3) {
-            powerup = new Powerup(new TripleShotWeapon(16, "tripleshotweapon"), randomXPos, upperYboundary, "tripleshot");
+            powerup = new Powerup(new TripleShotWeapon(19, "tripleshotweapon"), randomXPos, upperYboundary, "tripleshot");
         } else if (powerupChoice == 4) {
-            powerup = new Powerup(new ShrapnelWeapon(25, "shrapnelweapon"), randomXPos, upperYboundary, "shrapnel");
+            powerup = new Powerup(new ShrapnelWeapon(35, "shrapnelweapon"), randomXPos, upperYboundary, "shrapnel");
         } else if (powerupChoice == 5) {
             powerup = new Powerup(new RailgunWeapon(125, "railgunweapon"), randomXPos, upperYboundary, "railgun");
         } else {
@@ -210,7 +210,9 @@ public class GameEngine {
                     removeProjectiles.add(projectile);
                     if (player.takeDamage(projectile.getDamage())) {
                         Player killer = players.get(projectile.getPlayerID());
-                        killer.increaseScore(5);
+                        if (killer != null) {
+                            killer.increaseScore(5);
+                        }
                         killer.sendKillInfo(player.getName());
                         player.sendDeathInfo(killer.getName());
                         removePlayers.add(player);
