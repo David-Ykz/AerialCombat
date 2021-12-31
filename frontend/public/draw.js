@@ -99,7 +99,7 @@ function drawScoreboard(ctx, players, myPlayer) {
   for (var i = 0; i < sortedPlayers.length && i < leaderboardSize; i++) {
     var textColor = 'black';
     if (sortedPlayers[i].id == myPlayer.id) {
-      textColor = 'red';
+      textColor = 'green';
       currentPlayerInLeaderboard = true;
     }
     drawText(ctx, SCREEN_WIDTH - 200, leaderboardSize * 30 + 70 - (leaderboardSize - i) * 30, (i + 1).toString() + '. ' + sortedPlayers[i].name, 'left', textColor, '20px Arial');
@@ -107,8 +107,8 @@ function drawScoreboard(ctx, players, myPlayer) {
   }
   if (currentPlayerRank > leaderboardSize) {
     drawText(ctx, SCREEN_WIDTH - 200, leaderboardSize * 30 + 70, '     ...', 'left', 'black', '20px Arial');
-    drawText(ctx, SCREEN_WIDTH - 200, leaderboardSize * 30 + 70 + 30, currentPlayerRank.toString() + '. ' + myPlayer.name, 'left', 'red', '20px Arial');
-    drawText(ctx, SCREEN_WIDTH - 10, 130, myPlayer.score, 'right', 'red', '20px Arial');
+    drawText(ctx, SCREEN_WIDTH - 200, leaderboardSize * 30 + 70 + 30, currentPlayerRank.toString() + '. ' + myPlayer.name, 'left', 'green', '20px Arial');
+    drawText(ctx, SCREEN_WIDTH - 10, 130, myPlayer.score, 'right', 'green', '20px Arial');
   }
 }
 
