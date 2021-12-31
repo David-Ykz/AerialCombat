@@ -145,7 +145,8 @@ Clouds - Image by rawpixel.com
 
   function getHaxAngle(oppX, oppY, myX, myY) {
     mouseX = oppX - myX;
-    mouseY = oppY = myY;
+    mouseY = oppY - myY;
+    mouseY *= -1;
 
     if (mouseX == 0 && mouseY < 0) {
       angle = 0;
@@ -222,14 +223,20 @@ Clouds - Image by rawpixel.com
     var closestPlayer;
     var closestDist = 100000;
     for (const player of gameState.players) {
-      var dist = Math.sqrt( Math.pow((player.xPos - myPlayer.xPos), 2) + Math.pow((player.yPos - myPlayer.yPos), 2) );
+      var dist = Math.sqrt(Math.pow((player.xPos - myPlayer.xPos), 2) + Math.pow((player.yPos - myPlayer.yPos), 2));
       if (dist < closestDist && player.id != myPlayer.id) {
         closestDist = dist;
         closestPlayer = player;
       }
     }
-    socket.send(JSON.stringify({type: 'updateplayer', id: myPlayer.id, angle: getHaxAngle(closestPlayer.xPos, closestPlayer.yPos, myPlayer.xPos, myPlayer.yPos)}));
-    socket.send(JSON.stringify({type: 'shootbullet', id: myPlayer.id, angle: getHaxAngle(closestPlayer.xPos, closestPlayer.yPos, myPlayer.xPos, myPlayer.yPos)}));
+    const desiredAngle = getHaxAngle(closestPlayer.xPos, closestPlayer.yPos, myPlayer.xPos, myPlayer.yPos);
+    socket.send(JSON.stringify({type: 'updateplayer', id: myPlayer.id, angle: desiredAngle}));
+
+    var angleDiff = Math.abs(desiredAngle - myPlayer.angle);
+    angleDiff = angleDiff > 180 ? 360 - angleDiff : angleDiff;
+    if (angleDiff < 5) {
+      socket.send(JSON.stringify({type: 'shootbullet', id: myPlayer.id, angle: getHaxAngle(closestPlayer.xPos, closestPlayer.yPos, myPlayer.xPos, myPlayer.yPos)}));
+    }
   }
 
   function draw() {
