@@ -13,7 +13,7 @@ public class Bullet extends Projectile {
     public boolean checkCollision(Player player) {
         if (checkLineCollision(player)) {
             if (player.getxPos() >= getxPos() + getxVelocity() * getSpeed() && player.getxPos() <= getxPos() ||
-                    player.getxPos() <= getxPos() + getxVelocity() && player.getxPos() >= getxPos()) {
+                    player.getxPos() <= getxPos() + getxVelocity() * getSpeed() && player.getxPos() >= getxPos()) {
                 return true;
             }
         }
