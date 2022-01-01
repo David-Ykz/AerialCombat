@@ -55,7 +55,9 @@ Clouds - Image by rawpixel.com
   const canvas = document.getElementById('myCanvas');
   const context = canvas.getContext('2d');
 
-  var gameState = {players: [], powerups: [], projectiles: [], collisions: []};
+  var gameState = {players: [], powerups: [], projectiles: []};
+  // Need to render collisions separately because they can be overriden by new game state before they are rendered.
+  var collisions = [];
   // TODO: Better way of generating random obstacles within boundaries.
   var obstacles = [];
   for (var i =0 ; i < 30; i++) {
@@ -81,6 +83,7 @@ Clouds - Image by rawpixel.com
       const msg = JSON.parse(data);
       if (msg.type == 'gameInfo') {
         gameState = msg;
+        collisions.push(...gameState.collisions);
       } else if (msg.type == 'gameOver') {
         isGameOver = true;
         document.getElementById('newGameButton').style.visibility = 'visible';
@@ -216,9 +219,10 @@ Clouds - Image by rawpixel.com
       drawHealthBar(ctx, getRelativeX(player.xPos, myX), getRelativeY(player.yPos, myY) - 10 * RENDER_SCALE * SCREEN_SCALE, player.health);
     }
 
-    for(const collision of gameState.collisions) {
+    for(const collision of collisions) {
       explosionAnimations.push(new ExplosionAnimation(collision.xPos, collision.yPos, 150));
     }
+    collisions.length = 0;
 
     explosionAnimations.forEach((explosionAnimation, i) => {
       explosionAnimation.updateExplosion();
